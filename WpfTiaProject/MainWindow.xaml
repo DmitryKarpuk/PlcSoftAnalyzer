@@ -1,0 +1,30 @@
+﻿<Window x:Class="WpfTiaProject.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfTiaProject"
+        xmlns:view="clr-namespace:WpfTiaProject.View"
+        xmlns:vms="clr-namespace:WpfTiaProject.ViewModel"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Menu Grid.Row="0" Grid.ColumnSpan="2" Height="25">
+            <MenuItem Header="File" FontSize="15">
+                <MenuItem Header="Connect opened" Command="{Binding ConnectTia}"/>
+                <MenuItem Header="Disconnect project" Command="{Binding DisconnectTia}"/>
+            </MenuItem>
+        </Menu>
+        <view:ProjectInfoView x:Name="projectInfoView" Grid.Row="1" DataContext="{Binding ProjectInfoViewModel}"/>
+    </Grid>
+</Window>
