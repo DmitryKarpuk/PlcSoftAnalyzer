@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Siemens.Engineering;
+using Siemens.Engineering.HW;
 using WpfTiaProject.Model;
 
 namespace WpfTiaProject.ViewModel
@@ -69,7 +70,7 @@ namespace WpfTiaProject.ViewModel
             { _cpu = value; }
         }
         public ProjectInfoViewModel() { }
-        public ProjectInfoViewModel(Project project)
+        public ProjectInfoViewModel(Project project, DeviceItem cpu)
         {
             Name = project.Name;
             CreationTime = project.CreationTime.ToLongDateString();
@@ -80,7 +81,7 @@ namespace WpfTiaProject.ViewModel
             MultilingualTextItemComposition mltItemComposition = comment.Items;
             MultilingualTextItem englishComment = mltItemComposition.Find(englishLanguage);
             Comment = englishComment.Text;
-            CPU = TiaProject.GetCurrentCPUList(project)[0].Name;
+            CPU = cpu.Name;
         }
     }
 }

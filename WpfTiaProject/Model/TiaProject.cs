@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using Siemens.Engineering;
 using Siemens.Engineering.HmiUnified.HmiLogging.HmiLoggingCommon;
 using Siemens.Engineering.HW;
+using Siemens.Engineering.HW.Features;
 using Siemens.Engineering.SW;
+using Siemens.Engineering.SW.Tags;
 using WpfTiaProject.ViewModel;
 
 namespace WpfTiaProject.Model
@@ -41,6 +43,31 @@ namespace WpfTiaProject.Model
                 }
             }
             return deviceList;
+        }
+
+        public static PlcSoftware GetCurrentPlcSoftware(DeviceItem deviceItem)
+        {
+            SoftwareContainer softwareContainer = ((IEngineeringServiceProvider)deviceItem).GetService<SoftwareContainer>();
+            if (softwareContainer != null)
+            {
+                Software software = softwareContainer.Software;
+                return software as PlcSoftware;
+            }
+            return null;
+        }
+        public static List<TagTable> GetAllTagTables(PlcSoftware plcSoftware)
+        {
+            if (plcSoftware != null)
+            {
+                //Get tag table IEnumerable<PlcTagTable>
+                PlcTagTableComposition plcTagTables = plcSoftware.TagTableGroup.TagTables;
+                var tagTables = plcTagTables.Select(table => new TagTable(table)).ToList();
+                //Get tag table IEnumerable<PlcTagTableUserGroup>
+                PlcTagTableUserGroupComposition plcTagTableGroups = plcSoftware.TagTableGroup.Groups;
+                //var groupTagTables = plcTagTableGroups.SelectMany(tagGroup => tagGroup.TagTables, table => new TagTable(table)).ToList();
+                return tagTables;
+            }
+            else throw new ArgumentException("Tia project not connected");
         }
 
     }

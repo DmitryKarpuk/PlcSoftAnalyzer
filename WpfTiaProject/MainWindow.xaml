@@ -26,5 +26,20 @@
             </MenuItem>
         </Menu>
         <view:ProjectInfoView x:Name="projectInfoView" Grid.Row="1" DataContext="{Binding ProjectInfoViewModel}"/>
+        <GroupBox Grid.Row="2">
+            <StackPanel>
+                <CheckBox Content="Check tag references" Command="{Binding GetTagTables}" CommandParameter="{Binding TagCheckSelected}" 
+                          IsChecked="{Binding TagCheckSelected}" Margin="5"/>
+            <Expander Header="Tag tables"  Margin="5">
+                <ListBox DataContext="{Binding TagTables}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>   
+            </Expander>
+            </StackPanel>
+        </GroupBox>
     </Grid>
 </Window>
