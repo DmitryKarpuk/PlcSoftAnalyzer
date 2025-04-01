@@ -13,8 +13,7 @@ namespace WpfTiaProject.Model
     {
         public bool IsSelected {  get; set; }
         public PlcTagTable PlcTagTable { get; set; }
-        public TagTable() { }
-        public TagTable(PlcTagTable plcTagTable, bool isSelected=false)
+        public TagTable(PlcTagTable plcTagTable = null, bool isSelected = false)
         {
             IsSelected = isSelected;
             PlcTagTable = plcTagTable;

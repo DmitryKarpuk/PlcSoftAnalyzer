@@ -7,12 +7,13 @@
         xmlns:view="clr-namespace:WpfTiaProject.View"
         xmlns:vms="clr-namespace:WpfTiaProject.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="700" Width="700">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -28,10 +29,13 @@
         <view:ProjectInfoView x:Name="projectInfoView" Grid.Row="1" DataContext="{Binding ProjectInfoViewModel}"/>
         <GroupBox Grid.Row="2">
             <StackPanel>
-                <CheckBox Content="Check tag references" Command="{Binding GetTagTables}" CommandParameter="{Binding TagCheckSelected}" 
-                          IsChecked="{Binding TagCheckSelected}" Margin="5"/>
-            <Expander Header="Tag tables"  Margin="5">
-                <ListBox DataContext="{Binding TagTables}">
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <CheckBox Content="Check tag references" Command="{Binding GetTagTables}" CommandParameter="{Binding TagCheckSelected}" 
+                              IsChecked="{Binding TagCheckSelected}" Margin="5"/>
+                    <Button Content="Start" Style="{StaticResource WindowsButtonStyle}" Margin="20 0 0 0"/>
+                </StackPanel>
+                <Expander Header="Tag tables"  Margin="5">
+                <ListBox ItemsSource="{Binding TagTables}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                                 <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}"/>
@@ -40,6 +44,10 @@
                 </ListBox>   
             </Expander>
             </StackPanel>
+        </GroupBox>
+        <GroupBox Grid.Column="1" Grid.Row="1" Grid.RowSpan="4"
+                  Padding="10" Header="Report" x:Name="ReportView">
+            
         </GroupBox>
     </Grid>
 </Window>

@@ -59,7 +59,7 @@ namespace WpfTiaProject.ViewModel
         public MainViewModel()
         {
             ProjectInfoViewModel = null;
-            TagTables = null;    
+            TagTables = null;
             ConnectTia = new DelegateCommand(
                 (parameter) =>
                 {
@@ -82,7 +82,7 @@ namespace WpfTiaProject.ViewModel
                 {
                     if (parameter is bool == true)
                     {
-                        var tagTableViewModelList = TiaProject.GetAllTagTables(_currentPlcSoftware).Select(table => new TagTableViewModel(table));
+                        var tagTableViewModelList = TiaProject.GetAllTagTables(_currentPlcSoftware).Select(table => new TagTableViewModel(table.PlcTagTable.Name)).ToList();
                         TagTables = new ObservableCollection<TagTableViewModel>(tagTableViewModelList);
                     }
                     else TagTables = null;

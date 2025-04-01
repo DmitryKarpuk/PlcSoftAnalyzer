@@ -64,7 +64,15 @@ namespace WpfTiaProject.Model
                 var tagTables = plcTagTables.Select(table => new TagTable(table)).ToList();
                 //Get tag table IEnumerable<PlcTagTableUserGroup>
                 PlcTagTableUserGroupComposition plcTagTableGroups = plcSoftware.TagTableGroup.Groups;
-                //var groupTagTables = plcTagTableGroups.SelectMany(tagGroup => tagGroup.TagTables, table => new TagTable(table)).ToList();
+                foreach (var group in plcTagTableGroups)
+                {
+                    foreach (var table in group.TagTables)
+                    {
+                        tagTables.Add(new TagTable(table));
+                    }
+                }
+                //var groupTagTables = plcTagTableGroups.SelectMany(group => group.TagTables).ToList();
+                //tagTables.AddRange(groupTagTables.Select(table => new TagTable(table)));
                 return tagTables;
             }
             else throw new ArgumentException("Tia project not connected");
