@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 using System.Windows.Input;
 using Siemens.Engineering;
 using Siemens.Engineering.Hmi.Tag;
@@ -23,6 +24,7 @@ namespace WpfTiaProject.ViewModel
         private PlcSoftware _currentPlcSoftware;
         private ObservableCollection<TagTableViewModel> _tagTables;
         private bool _tagCheckSelected;
+        private TagRefReportViewModel _tagRefReportViewModel;
         public ObservableCollection<TagTableViewModel> TagTables
         { get { return _tagTables; }
           set
@@ -44,6 +46,15 @@ namespace WpfTiaProject.ViewModel
             }
         }
         //public PlcSoftware PlcSoftware { get; set; }
+        public TagRefReportViewModel TagRefReportViewModel
+        {
+            get { return _tagRefReportViewModel; }
+            set
+            {
+                _tagRefReportViewModel = value;
+                OnPropertyChanged(nameof(TagRefReportViewModel));
+            }
+        }
         public bool TagCheckSelected
         {
             get { return _tagCheckSelected; }
@@ -56,10 +67,12 @@ namespace WpfTiaProject.ViewModel
         public ICommand ConnectTia { get; }
         public ICommand DisconnectTia { get; }
         public ICommand GetTagTables { get; }
+        public ICommand GetTagReferencesReport { get; }
         public MainViewModel()
         {
             ProjectInfoViewModel = null;
             TagTables = null;
+            TagRefReportViewModel = null;
             ConnectTia = new DelegateCommand(
                 (parameter) =>
                 {
@@ -86,8 +99,13 @@ namespace WpfTiaProject.ViewModel
                         TagTables = new ObservableCollection<TagTableViewModel>(tagTableViewModelList);
                     }
                     else TagTables = null;
-                }
-                );
+    }
+    );
+            GetTagReferencesReport = new DelegateCommand(
+                (parameter) =>
+                {
+                    TagRefReportViewModel = new TagRefReportViewModel(TagTables);
+                });
         }
     }
 }

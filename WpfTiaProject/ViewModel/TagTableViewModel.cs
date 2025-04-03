@@ -12,6 +12,7 @@ namespace WpfTiaProject.ViewModel
     {
         public bool IsSelected { get; set; }
         public string Name { get; set; }
+
         public TagTableViewModel(string name, bool isSelected = false)
         {
             IsSelected = isSelected;
