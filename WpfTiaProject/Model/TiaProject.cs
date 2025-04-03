@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Siemens.Engineering;
+using Siemens.Engineering.CrossReference;
 using Siemens.Engineering.HmiUnified.HmiLogging.HmiLoggingCommon;
 using Siemens.Engineering.HW;
 using Siemens.Engineering.HW.Features;
@@ -76,6 +77,25 @@ namespace WpfTiaProject.Model
                 return tagTables;
             }
             else throw new ArgumentException("Tia project not connected");
+        }
+
+        public static int CalculateReferences(PlcTag tag)
+        {
+            int referenceCount = 0;
+            var sources = GetSources(tag);
+            foreach( var source in sources)
+            {
+                referenceCount += source.References.Count;
+            }
+            return referenceCount;
+        }
+
+        public static SourceObjectComposition GetSources(PlcTag tag)
+        {
+            var tagRefService = tag.GetService<CrossReferenceService>();
+            var tagRefResult = tagRefService.GetCrossReferences(CrossReferenceFilter.ObjectsWithoutReferences);
+            SourceObjectComposition tagRefSources = tagRefResult.Sources;
+            return tagRefSources;
         }
 
 
