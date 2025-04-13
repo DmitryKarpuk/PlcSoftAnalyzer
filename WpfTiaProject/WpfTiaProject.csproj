@@ -88,15 +88,19 @@
     <Compile Include="Model\TiaProject.cs" />
     <Compile Include="ViewModel\DelegateCommand.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\ProgressViewModel.cs" />
     <Compile Include="ViewModel\ProjectInfoViewModel.cs" />
     <Compile Include="ViewModel\TagRefReportViewModel.cs" />
     <Compile Include="ViewModel\TagTableViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="View\ProgressWindow.xaml.cs">
+      <DependentUpon>ProgressWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ProjectInfoView.xaml.cs">
       <DependentUpon>ProjectInfoView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\TagReferencesReportView.xaml.cs">
-      <DependentUpon>TagReferencesReportView.xaml</DependentUpon>
+    <Compile Include="View\TagReferencesReport.xaml.cs">
+      <DependentUpon>TagReferencesReport.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -110,11 +114,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\ProgressWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\ProjectInfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\TagReferencesReportView.xaml">
+    <Page Include="View\TagReferencesReport.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

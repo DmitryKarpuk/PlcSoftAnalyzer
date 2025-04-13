@@ -11,6 +11,7 @@ using Siemens.Engineering.Hmi.Tag;
 using Siemens.Engineering.HW;
 using Siemens.Engineering.SW;
 using WpfTiaProject.Model;
+using WpfTiaProject.View;
 
 
 namespace WpfTiaProject.ViewModel
@@ -25,6 +26,7 @@ namespace WpfTiaProject.ViewModel
         private ObservableCollection<TagTableViewModel> _tagTables;
         private bool _tagCheckSelected;
         private TagRefReportViewModel _tagRefReportViewModel;
+        private List<TagRefReport> _tagRefReports;
         public ObservableCollection<TagTableViewModel> TagTables
         { get { return _tagTables; }
           set
@@ -95,7 +97,7 @@ namespace WpfTiaProject.ViewModel
                 {
                     if (parameter is bool == true)
                     {
-                        var tagTableViewModelList = TiaProject.GetAllTagTables(_currentPlcSoftware).Select(table => new TagTableViewModel(table.PlcTagTable.Name)).ToList();
+                        var tagTableViewModelList = TiaProject.GetAllTagTables(_currentPlcSoftware).Select(table => new TagTableViewModel(table)).ToList();
                         TagTables = new ObservableCollection<TagTableViewModel>(tagTableViewModelList);
                     }
                     else TagTables = null;
@@ -104,7 +106,10 @@ namespace WpfTiaProject.ViewModel
             GetTagReferencesReport = new DelegateCommand(
                 (parameter) =>
                 {
-                    TagRefReportViewModel = new TagRefReportViewModel(TagTables);
+                    var progressWindow = new ProgressWindowView(TagTables.Where(table => table.IsSelected).ToList());
+                    progressWindow.ShowDialog();
+                    _tagRefReports = ((ProgressViewModel)progressWindow.DataContext).Result;
+                    TagRefReportViewModel = new TagRefReportViewModel(_tagRefReports);
                 });
         }
     }

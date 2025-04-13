@@ -93,9 +93,21 @@ namespace WpfTiaProject.Model
         public static SourceObjectComposition GetSources(PlcTag tag)
         {
             var tagRefService = tag.GetService<CrossReferenceService>();
-            var tagRefResult = tagRefService.GetCrossReferences(CrossReferenceFilter.ObjectsWithoutReferences);
+            var tagRefResult = tagRefService.GetCrossReferences(CrossReferenceFilter.AllObjects);
             SourceObjectComposition tagRefSources = tagRefResult.Sources;
             return tagRefSources;
+        }
+
+        public static SortedDictionary<int, int> DefineRefTagRateInTable(PlcTagTable table)
+        {
+            var result = new SortedDictionary<int, int>();
+            foreach (var tag in table.Tags)
+            {
+                int references = TiaProject.CalculateReferences(tag);
+                if (result.ContainsKey(references)) result[references]++;
+                else result[references] = 1;
+            }
+            return result;
         }
 
 
