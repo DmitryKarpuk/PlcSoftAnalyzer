@@ -14,6 +14,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -46,9 +47,15 @@
             </Expander>
             </StackPanel>
         </GroupBox>
-        <GroupBox Grid.Column="1" Grid.Row="1" Grid.RowSpan="4" MinWidth="300"
+        <GroupBox Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" MinWidth="300"
                   Padding="10" Header="Report" x:Name="ReportView" DataContext="{Binding TagRefReportViewModel}">
             <FlowDocumentReader Document="{Binding TagRefReport}"/>
         </GroupBox>
+
+        <StatusBar Grid.Row="15" Grid.ColumnSpan="2" Height="25" VerticalAlignment="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="{Binding Path=ThreadId, StringFormat=Thread Id : {0}}"/>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -10,6 +11,7 @@ using Siemens.Engineering;
 using Siemens.Engineering.Hmi.Tag;
 using Siemens.Engineering.HW;
 using Siemens.Engineering.SW;
+using Siemens.Engineering.SW.Tags;
 using WpfTiaProject.Model;
 using WpfTiaProject.View;
 
@@ -24,9 +26,11 @@ namespace WpfTiaProject.ViewModel
         private ProjectInfoViewModel _projectInfoViewMode;
         private PlcSoftware _currentPlcSoftware;
         private ObservableCollection<TagTableViewModel> _tagTables;
+        private List<Model.TagTable> _TagTables;
         private bool _tagCheckSelected;
         private TagRefReportViewModel _tagRefReportViewModel;
         private List<TagRefReport> _tagRefReports;
+        public int ThreadId => Thread.CurrentThread.ManagedThreadId;
         public ObservableCollection<TagTableViewModel> TagTables
         { get { return _tagTables; }
           set
@@ -97,8 +101,8 @@ namespace WpfTiaProject.ViewModel
                 {
                     if (parameter is bool == true)
                     {
-                        var tagTableViewModelList = TiaProject.GetAllTagTables(_currentPlcSoftware).Select(table => new TagTableViewModel(table)).ToList();
-                        TagTables = new ObservableCollection<TagTableViewModel>(tagTableViewModelList);
+                        _TagTables = TiaProject.GetAllTagTables(_currentPlcSoftware);
+                        TagTables = new ObservableCollection<TagTableViewModel>(_TagTables.Select(table => new TagTableViewModel(table)));
                     }
                     else TagTables = null;
     }
@@ -106,9 +110,7 @@ namespace WpfTiaProject.ViewModel
             GetTagReferencesReport = new DelegateCommand(
                 (parameter) =>
                 {
-                    var progressWindow = new ProgressWindowView(TagTables.Where(table => table.IsSelected).ToList());
-                    progressWindow.ShowDialog();
-                    _tagRefReports = ((ProgressViewModel)progressWindow.DataContext).Result;
+                    _tagRefReports = TiaProject.GeTableTagsRefData(TagTables.Where(table => table.IsSelected).Select(table => table.TagTable).ToList());
                     TagRefReportViewModel = new TagRefReportViewModel(_tagRefReports);
                 });
         }

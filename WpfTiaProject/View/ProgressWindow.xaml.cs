@@ -15,25 +15,13 @@ using WpfTiaProject.ViewModel;
 
 namespace WpfTiaProject.View
 {
-    /// <summary>
-    /// Interaction logic for ProgressWindowView.xaml
-    /// </summary>
-    public partial class ProgressWindowView : Window
+    public partial class ProgressWindow : Window
     {
-        private ProgressViewModel viewModel;
-        public ProgressWindowView(List<TagTableViewModel> data)
+        public ProgressWindow()
         {
             InitializeComponent();
-            viewModel = new ProgressViewModel(data);
-            viewModel.CloseAction = () => this.Close();
-            this.DataContext = viewModel;
-
-            this.Loaded += ProgressWindow_Loaded;
-        }
-
-        private void ProgressWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            viewModel.DoWork();
+            var vm = (ProgressViewModel)this.DataContext;
+            vm.CloseAction = () => this.Close();
         }
     }
 }

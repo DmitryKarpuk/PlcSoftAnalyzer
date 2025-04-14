@@ -98,18 +98,30 @@ namespace WpfTiaProject.Model
             return tagRefSources;
         }
 
-        public static SortedDictionary<int, int> DefineRefTagRateInTable(PlcTagTable table)
+        public static List<TagRefReport> GeTableTagsRefData(List<PlcTagTable> tables)
         {
-            var result = new SortedDictionary<int, int>();
-            foreach (var tag in table.Tags)
+            var result = new List<TagRefReport>();
+            foreach (var table in tables)
             {
-                int references = TiaProject.CalculateReferences(tag);
-                if (result.ContainsKey(references)) result[references]++;
-                else result[references] = 1;
+                if (table != null)
+                {
+                    var item = new TagRefReport()
+                    {
+                        TableName = table.Name,
+                    };
+                    var tableReferences = new SortedDictionary<int, int>();
+                    foreach (var tag in table.Tags)
+                    {
+                        var tagReferences = TiaProject.CalculateReferences(tag);
+                        if (tableReferences.ContainsKey(tagReferences)) tableReferences[tagReferences]++;
+                        else tableReferences[tagReferences] = 1;
+                    }
+                    item.TagsRefRate = tableReferences;
+                    result.Add(item);
+                }
             }
             return result;
         }
-
 
     }
 }
