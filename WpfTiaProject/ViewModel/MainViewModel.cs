@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -108,11 +109,19 @@ namespace WpfTiaProject.ViewModel
     }
     );
             GetTagReferencesReport = new DelegateCommand(
-                (parameter) =>
+                async (parameter) =>
                 {
-                    _tagRefReports = TiaProject.GeTableTagsRefData(TagTables.Where(table => table.IsSelected).Select(table => table.TagTable).ToList());
-                    TagRefReportViewModel = new TagRefReportViewModel(_tagRefReports);
+                    await ExecuteDataLoad();
                 });
+        }
+
+        private async Task ExecuteDataLoad()
+        {
+            await Task.Run(() =>
+            {
+                _tagRefReports = TiaProject.GeTableTagsRefData(TagTables.Where(table => table.IsSelected).Select(table => table.TagTable).ToList());
+                TagRefReportViewModel = new TagRefReportViewModel(_tagRefReports);
+            });
         }
     }
 }
