@@ -27,6 +27,7 @@ namespace WpfTiaProject.ViewModel
         {
             Cancel = new DelegateCommand(
                 (parameter) => CloseAction?.Invoke());
+
         }
     }
 }
