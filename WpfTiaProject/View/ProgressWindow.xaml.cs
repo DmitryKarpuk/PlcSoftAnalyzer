@@ -17,11 +17,14 @@ namespace WpfTiaProject.View
 {
     public partial class ProgressWindow : Window
     {
-        public ProgressWindow()
+        public ProgressViewModel ViewModel { get; set; }
+        public ProgressWindow(ProgressViewModel viewModel)
         {
             InitializeComponent();
-            var vm = (ProgressViewModel)this.DataContext;
-            vm.CloseAction = () => this.Close();
+            ViewModel = viewModel;
+            this.DataContext = ViewModel;
+            ViewModel.CloseAction = () => this.Close();
+            this.ShowDialog();
         }
     }
 }
