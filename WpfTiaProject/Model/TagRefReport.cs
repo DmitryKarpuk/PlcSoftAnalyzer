@@ -10,12 +10,22 @@ namespace WpfTiaProject.Model
     public class TagRefReport
     {
         public string TableName {  get; set; }
-        public SortedDictionary<int, int> TagsRefRate { get; set; }
+        public Dictionary<TagAddressType, SortedDictionary<int, int>> TagsRefData { get; set; }
         public TagRefReport() { }
-        public TagRefReport(string Name, SortedDictionary<int, int> tagsRefRate)
+        public TagRefReport(string Name)
         {
             TableName = Name;
-            TagsRefRate = tagsRefRate;
+            TagsRefData = new Dictionary<TagAddressType, SortedDictionary<int, int>>();
+            foreach(var type in Enum.GetValues(typeof(TagAddressType)))
+            {
+                TagsRefData.Add((TagAddressType)type, new SortedDictionary<int, int>());
+            }
+
+        }
+        public TagRefReport(string Name, Dictionary<TagAddressType, SortedDictionary<int, int>> tagsRefRate)
+        {
+            TableName = Name;
+            TagsRefData = tagsRefRate;
         }
     }
 }

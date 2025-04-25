@@ -103,22 +103,33 @@ namespace WpfTiaProject.Model
             {
                 if (table != null)
                 {
-                    var item = new TagRefReport()
-                    {
-                        TableName = table.Name,
-                    };
-                    var tableReferences = new SortedDictionary<int, int>();
+                    var reportItem = new TagRefReport(table.Name);
+                    var tagsRefData = reportItem.TagsRefData;
                     foreach (var tag in table.Tags)
                     {
                         var tagReferences = TiaProject.CalculateReferences(tag);
-                        if (tableReferences.ContainsKey(tagReferences)) tableReferences[tagReferences]++;
-                        else tableReferences[tagReferences] = 1;
+                        TagAddressType tagType = DefineTagType(tag);                       
+                        if (tagsRefData[tagType].ContainsKey(tagReferences)) tagsRefData[tagType][tagReferences]++;
+                        else tagsRefData[tagType][tagReferences] = 1;
                     }
-                    item.TagsRefRate = tableReferences;
-                    result.Add(item);
+                    reportItem.TagsRefData = tagsRefData;
+                    result.Add(reportItem);
                 }
             }
             return result;
+        }
+
+        private static TagAddressType DefineTagType(PlcTag tag)
+        {
+            string tagAdress = tag.LogicalAddress;
+            switch (tagAdress.ToLower()[1])
+            {
+                case 'i': return TagAddressType.Input;
+                case 'q': return TagAddressType.Output;
+                case 'm': return TagAddressType.Merker;
+                case 't': return TagAddressType.Timer;
+                default: return TagAddressType.Undefined;
+            }
         }
 
     }
