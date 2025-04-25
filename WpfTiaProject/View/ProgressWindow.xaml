@@ -5,16 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfTiaProject.View"
         mc:Ignorable="d"
-        Title="ProgressWindow" Height="120" Width="300">
-    <DockPanel>
-        <StackPanel Margin="10" DockPanel.Dock="Top">
+        Title="ProgressWindow" Height="125" Width="300">
+    <StackPanel>
+        <StackPanel Margin="10">
             <ProgressBar Height="20" Minimum="0" Maximum="100" Margin="0,0,0,10" IsIndeterminate="True"/>
             <Button Content="Отмена" Command="{Binding Cancel}" HorizontalAlignment="Center"/>
         </StackPanel>
-        <StatusBar Height="20" VerticalAlignment="Bottom" DockPanel.Dock="Bottom">
-            <StatusBarItem>
-                <TextBlock Text="{Binding Path=ThreadId, StringFormat=Thread Id : {0}}"/>
+        <StatusBar Height="20" VerticalAlignment="Bottom">
+            <StatusBarItem Height="20">
+                <TextBlock Text="{Binding Path=ThreadId, StringFormat=Thread Id : {0}}" VerticalAlignment="Center" FontSize="10"/>
             </StatusBarItem>
         </StatusBar>
-    </DockPanel>
+    </StackPanel>
 </Window>

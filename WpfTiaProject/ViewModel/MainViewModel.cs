@@ -114,7 +114,7 @@ namespace WpfTiaProject.ViewModel
             GetTagReferencesReport = new DelegateCommand(
                 (parameter) =>
                 {
-                    OpenNewThreadWindow();
+                    OpenNewThreadWindow(ExecuteDataLoad);
                 });
         }
 
@@ -127,7 +127,7 @@ namespace WpfTiaProject.ViewModel
             });
         }
 
-        private async void OpenNewThreadWindow()
+        private async void OpenNewThreadWindow(Func<CancellationToken, Task> operation)
         {
             CancellationTokenSource _cts = new CancellationTokenSource();
             ProgressWindow window = null;
@@ -145,7 +145,7 @@ namespace WpfTiaProject.ViewModel
             thread.SetApartmentState(ApartmentState.STA);
             thread.IsBackground = true;
             thread.Start();
-            await ExecuteDataLoad(_cts.Token);
+            await operation(_cts.Token);
             if (window != null && window.Dispatcher.Thread.IsAlive)
             {
                 window.Dispatcher.Invoke(() => window.Close());              

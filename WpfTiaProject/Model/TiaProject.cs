@@ -72,8 +72,6 @@ namespace WpfTiaProject.Model
                         tagTables.Add(new TagTable(table));
                     }
                 }
-                //var groupTagTables = plcTagTableGroups.SelectMany(group => group.TagTables).ToList();
-                //tagTables.AddRange(groupTagTables.Select(table => new TagTable(table)));
                 return tagTables;
             }
             else throw new ArgumentException("Tia project not connected");
