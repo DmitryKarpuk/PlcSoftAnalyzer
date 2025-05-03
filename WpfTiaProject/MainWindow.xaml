@@ -31,12 +31,13 @@
         <view:ProjectInfoView x:Name="projectInfoView" Grid.Row="1" DataContext="{Binding ProjectInfoViewModel}"/>
         <GroupBox Grid.Row="2">
             <StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <CheckBox Content="Check tag references" Command="{Binding GetTagTables}" CommandParameter="{Binding TagCheckSelected}" 
-                              IsChecked="{Binding TagCheckSelected}" Margin="5"/>
-                    <Button Content="Start" Style="{StaticResource WindowsButtonStyle}" Margin="20 0 0 0" Command="{Binding GetTagReferencesReport}"/>
+                <StackPanel Orientation="Horizontal" Margin="5" >
+                    <CheckBox Content="Check tag references" Command="{Binding GetTagTables}" CommandParameter="{Binding IsTagCheckSelected}" 
+                              IsChecked="{Binding IsTagCheckSelected}" IsEnabled="{Binding IsTiaConnected, UpdateSourceTrigger=PropertyChanged}" Margin="5" />
+                    <Button Content="Start" Style="{StaticResource WindowsButtonStyle}" Margin="20 0 0 0" Command="{Binding GetTagReferencesReport}"
+                            IsEnabled="{Binding IsTagCheckSelected, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
-                <Expander Header="Tag tables"  Margin="5">
+                <Expander Header="Tag tables" IsEnabled="{Binding IsTagCheckSelected, UpdateSourceTrigger=PropertyChanged}"  Margin="5">
                 <ListBox ItemsSource="{Binding TagTables}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>

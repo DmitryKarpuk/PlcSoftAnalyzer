@@ -31,9 +31,10 @@ namespace WpfTiaProject.ViewModel
         private PlcSoftware _currentPlcSoftware;
         private ObservableCollection<TagTableViewModel> _tagTables;
         private List<Model.TagTable> _TagTables;
-        private bool _tagCheckSelected;
         private TagRefReportViewModel _tagRefReportViewModel;
         private List<TagRefReport> _tagRefReports;
+        private bool _isTagCheckSelected;
+        private bool _isTiaConnected;
         public int ThreadId => Thread.CurrentThread.ManagedThreadId;
         public ObservableCollection<TagTableViewModel> TagTables
         { get { return _tagTables; }
@@ -65,13 +66,22 @@ namespace WpfTiaProject.ViewModel
                 OnPropertyChanged(nameof(TagRefReportViewModel));
             }
         }
-        public bool TagCheckSelected
+        public bool IsTagCheckSelected
         {
-            get { return _tagCheckSelected; }
+            get { return _isTagCheckSelected; }
             set
             {
-                _tagCheckSelected = value;
-                OnPropertyChanged(nameof(TagCheckSelected));
+                _isTagCheckSelected = value;
+                OnPropertyChanged(nameof(IsTagCheckSelected));
+            }
+        }
+        public bool IsTiaConnected
+        {
+            get { return _isTiaConnected; }
+            set
+            {
+                _isTiaConnected = value;
+                OnPropertyChanged(nameof(IsTiaConnected));
             }
         }
         public ICommand ConnectTia { get; }
@@ -91,15 +101,23 @@ namespace WpfTiaProject.ViewModel
                     _currentCPU = TiaProject.GetCurrentCPUList(_currentProject)[0];
                     _currentPlcSoftware = TiaProject.GetCurrentPlcSoftware(_currentCPU);
                     ProjectInfoViewModel = new ProjectInfoViewModel(_currentProject, _currentCPU);
-                });
+                    IsTiaConnected = true;
+                        
+                    });
+
             DisconnectTia = new DelegateCommand(
                 (parameter) =>
                 {
                     _tiaPortal.Dispose();
-                    _tiaPortal = null;  
+                    _tiaPortal = null;
                     _currentProject = null;
                     ProjectInfoViewModel = null;
+                    IsTiaConnected = false;
+                    IsTagCheckSelected = false;
+                    TagTables.Clear();
                 });
+
+
             GetTagTables = new DelegateCommand(
                 (parameter) =>
                 {
