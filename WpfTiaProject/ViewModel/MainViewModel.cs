@@ -30,7 +30,6 @@ namespace WpfTiaProject.ViewModel
         private ProjectInfoViewModel _projectInfoViewMode;
         private PlcSoftware _currentPlcSoftware;
         private ObservableCollection<TagTableViewModel> _tagTables;
-        private List<Model.TagTable> _TagTables;
         private TagRefReportViewModel _tagRefReportViewModel;
         private List<TagRefReport> _tagRefReports;
         private bool _isTagCheckSelected;
@@ -84,10 +83,26 @@ namespace WpfTiaProject.ViewModel
                 OnPropertyChanged(nameof(IsTiaConnected));
             }
         }
+
+        /// <summary>
+        /// Command for connecting to opened Tia Portal project. 
+        /// </summary>
         public ICommand ConnectTia { get; }
+
+        /// <summary>
+        /// Command for terminating connection to Tia Portal
+        /// </summary>
         public ICommand DisconnectTia { get; }
-        public ICommand GetTagTables { get; }
-        public ICommand GetTagReferencesReport { get; }
+
+        /// <summary>
+        /// Load PLC tag tables from the project.
+        /// </summary>
+        public ICommand LoadTagTables { get; }
+
+        /// <summary>
+        /// Load and generate report of tag references.
+        /// </summary>
+        public ICommand LoadTagReferencesReport { get; }
         public MainViewModel()
         {
             ProjectInfoViewModel = null;
@@ -118,18 +133,18 @@ namespace WpfTiaProject.ViewModel
                 });
 
 
-            GetTagTables = new DelegateCommand(
+            LoadTagTables = new DelegateCommand(
                 (parameter) =>
                 {
                     if (parameter is bool == true)
                     {
-                        _TagTables = TiaProject.GetAllTagTables(_currentPlcSoftware);
-                        TagTables = new ObservableCollection<TagTableViewModel>(_TagTables.Select(table => new TagTableViewModel(table)));
+                        var tagTables = TiaProject.GetAllTagTables(_currentPlcSoftware);
+                        TagTables = new ObservableCollection<TagTableViewModel>(tagTables.Select(table => new TagTableViewModel(table)));
                     }
                     else TagTables = null;
     }
     );
-            GetTagReferencesReport = new DelegateCommand(
+            LoadTagReferencesReport = new DelegateCommand(
                 (parameter) =>
                 {
                     OpenNewThreadWindow(ExecuteDataLoad);

@@ -14,20 +14,30 @@ using WpfTiaProject.ViewModel;
 
 namespace WpfTiaProject.Model
 {
+    /// <summary>
+    /// Wrapper class for working with Tia Portal via TiaOpenness API
+    /// </summary>
     public static class TiaProject
     {
+        /// <summary>
+        /// Connection to opened Tia Portal project.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException">Throw if there are no opened Tia Portal processes</exception>
         public static TiaPortal ConnectTiaPortal()
         {
             int processId;
-            //Get processes list
             var TiaPortalProcessList = new List<TiaPortalProcess>(TiaPortal.GetProcesses());
-            // Get process Id of first Tia process
             if (TiaPortalProcessList.Count >= 1) processId = TiaPortalProcessList[0].Id;
             else throw new ArgumentException("No TiaPortal precess opened");
-            // Get TiaPortal instance of first process Id
             return TiaPortal.GetProcess(processId).Attach();
         }
 
+        /// <summary>
+        /// Get list of CPU devices from the project.
+        /// </summary>
+        /// <param name="project">Tia Portal project</param>
+        /// <returns>List of defined CPU</returns>
         public static List<DeviceItem> GetCurrentCPUList(Project project)
         {
             var deviceList = new List<DeviceItem>();
@@ -46,6 +56,11 @@ namespace WpfTiaProject.Model
             return deviceList;
         }
 
+        /// <summary>
+        /// Get PLC Software object of the corresponding device.
+        /// </summary>
+        /// <param name="deviceItem">PLC device object.</param>
+        /// <returns>PLC software object.</returns>
         public static PlcSoftware GetCurrentPlcSoftware(DeviceItem deviceItem)
         {
             SoftwareContainer softwareContainer = ((IEngineeringServiceProvider)deviceItem).GetService<SoftwareContainer>();
@@ -56,27 +71,34 @@ namespace WpfTiaProject.Model
             }
             return null;
         }
+
+        /// <summary>
+        /// Load all tag tables from PLC Software.
+        /// </summary>
+        /// <param name="plcSoftware"> PLC Software object</param>
+        /// <returns>List of tab tables</returns>
         public static List<TagTable> GetAllTagTables(PlcSoftware plcSoftware)
         {
-            if (plcSoftware != null)
+            //Get tag table IEnumerable<PlcTagTable>
+            PlcTagTableComposition plcTagTables = plcSoftware.TagTableGroup.TagTables;
+            var tagTables = plcTagTables.Select(table => new TagTable(table)).ToList();
+            //Get tag table IEnumerable<PlcTagTableUserGroup>
+            PlcTagTableUserGroupComposition plcTagTableGroups = plcSoftware.TagTableGroup.Groups;
+            foreach (var group in plcTagTableGroups)
             {
-                //Get tag table IEnumerable<PlcTagTable>
-                PlcTagTableComposition plcTagTables = plcSoftware.TagTableGroup.TagTables;
-                var tagTables = plcTagTables.Select(table => new TagTable(table)).ToList();
-                //Get tag table IEnumerable<PlcTagTableUserGroup>
-                PlcTagTableUserGroupComposition plcTagTableGroups = plcSoftware.TagTableGroup.Groups;
-                foreach (var group in plcTagTableGroups)
+                foreach (var table in group.TagTables)
                 {
-                    foreach (var table in group.TagTables)
-                    {
-                        tagTables.Add(new TagTable(table));
-                    }
+                    tagTables.Add(new TagTable(table));
                 }
-                return tagTables;
             }
-            else throw new ArgumentException("Tia project not connected");
-        }
+            return tagTables;
+          }
 
+        /// <summary>
+        /// Calculate cross references of the PLC tag.
+        /// </summary>
+        /// <param name="tag">PLC tag object</param>
+        /// <returns>Amount of references.</returns>
         public static int CalculateReferences(PlcTag tag)
         {
             int referenceCount = 0;
@@ -88,6 +110,11 @@ namespace WpfTiaProject.Model
             return referenceCount;
         }
 
+        /// <summary>
+        /// Get all cross reference sources of the tag
+        /// </summary>
+        /// <param name="tag">PLC tag object.</param>
+        /// <returns>Cross reference sources of the tag.</returns>
         public static SourceObjectComposition GetSources(PlcTag tag)
         {
             var tagRefService = tag.GetService<CrossReferenceService>();
@@ -96,6 +123,11 @@ namespace WpfTiaProject.Model
             return tagRefSources;
         }
 
+        /// <summary>
+        /// Generate tag reference report data for each PLC tag table.
+        /// </summary>
+        /// <param name="tables">List of Plc tag rables.</param>
+        /// <returns>List of reports for each table.</returns>
         public static List<TagRefReport> GeTableTagsRefData(List<PlcTagTable> tables)
         {
             var result = new List<TagRefReport>();
@@ -119,6 +151,11 @@ namespace WpfTiaProject.Model
             return result;
         }
 
+        /// <summary>
+        /// Define tag type depend of address.
+        /// </summary>
+        /// <param name="tag">PLC tag</param>
+        /// <returns>Taf type.</returns>
         private static TagAddressType DefineTagType(PlcTag tag)
         {
             string tagAdress = tag.LogicalAddress;

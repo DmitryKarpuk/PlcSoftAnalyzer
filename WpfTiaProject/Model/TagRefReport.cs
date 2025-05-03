@@ -7,9 +7,19 @@ using Siemens.Engineering.SW.Tags;
 
 namespace WpfTiaProject.Model
 {
+    /// <summary>
+    /// Represents a reference report for a PLC tag table.
+    /// Holds the table name and structured reference data grouped by tag address type.
+    /// </summary>
     public class TagRefReport
     {
         public string TableName {  get; set; }
+
+        /// <summary>
+        /// Gets or sets the reference data for tags.
+        /// The outer dictionary is grouped by tag address type,
+        /// the inner dictionary maps reference count to occurrence count.
+        /// </summary>
         public Dictionary<TagAddressType, SortedDictionary<int, int>> TagsRefData { get; set; }
         public TagRefReport() { }
         public TagRefReport(string Name)
