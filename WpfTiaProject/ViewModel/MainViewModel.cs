@@ -105,13 +105,13 @@ namespace WpfTiaProject.ViewModel
         /// Load and generate report of tag references.
         /// </summary>
         public ICommand LoadTagReferencesReport { get; }
-        public MainViewModel()
+        public MainViewModel(IProgressService progressService)
         {
             var cts = new CancellationToken();
             ProjectInfoViewModel = null;
             TagTables = null;
             TagRefReportViewModel = null;
-            _progressService = new ProgressService<ProgressWindow>(new ProgressViewModel(), cts);
+            _progressService = progressService;
             ConnectTia = new DelegateCommand(
                 (parameter) =>
                 {

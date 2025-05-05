@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using WpfTiaProject.ViewModel;
 using WpfTiaProject.View;
+using WpfTiaProject.Services;
 
 namespace WpfTiaProject
 {
@@ -17,7 +18,8 @@ namespace WpfTiaProject
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            var dataContext = new MainViewModel();
+            var propgressService = new ProgressService<ProgressWindow>(new ProgressViewModel());
+            var dataContext = new MainViewModel(propgressService);
             MainWindow = new MainWindow()
             {
                 DataContext = dataContext

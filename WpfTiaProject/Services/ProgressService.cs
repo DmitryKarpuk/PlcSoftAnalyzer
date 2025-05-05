@@ -16,11 +16,10 @@ namespace WpfTiaProject.Services
     {
         public TProgressWindow ProgressWindow { get; set; }
         private ViewModelBase _progressViewModel { get; set; }
-        private CancellationToken _cts { get; set; }
-        public ProgressService(ViewModelBase viewModel, CancellationToken cts)
+        private CancellationTokenSource _cts { get; set; }
+        public ProgressService(ViewModelBase viewModel)
         {
             _progressViewModel = viewModel;
-            _cts = cts;
         }
         public async Task RunWithProgressWindowAsync(Func<CancellationToken, Task> operation)
         {
