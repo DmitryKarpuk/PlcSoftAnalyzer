@@ -18,17 +18,9 @@ namespace WpfTiaProject.View
 {
     public partial class ProgressWindow : Window
     {
-        public ProgressViewModel ViewModel { get; set; }
-        public ProgressWindow(ProgressViewModel viewModel)
+        public ProgressWindow()
         {
-            InitializeComponent();
-            ViewModel = viewModel;
-            this.DataContext = ViewModel;
-            ViewModel.CloseAction = () =>
-            {
-                this.Close();
-                Dispatcher.CurrentDispatcher.InvokeShutdown();
-            };           
+            InitializeComponent();         
         }
     }
 }

@@ -22,7 +22,7 @@
         </Grid.ColumnDefinitions>
 
         <Menu Grid.Row="0" Grid.ColumnSpan="2" Height="25">
-            <MenuItem Header="File" FontSize="15">
+            <MenuItem Header="File" Height="Auto">
                 <MenuItem Header="Connect opened" Command="{Binding ConnectTia}"/>
                 <MenuItem Header="Disconnect project" Command="{Binding DisconnectTia}"/>
             </MenuItem>

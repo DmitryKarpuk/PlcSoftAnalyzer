@@ -87,6 +87,8 @@
     <Compile Include="Model\TagTable.cs" />
     <Compile Include="Model\TagAddressType.cs" />
     <Compile Include="Model\TiaProject.cs" />
+    <Compile Include="Services\IProgressService.cs" />
+    <Compile Include="Services\ProgressService.cs" />
     <Compile Include="ViewModel\DelegateCommand.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ProgressViewModel.cs" />

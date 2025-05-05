@@ -21,13 +21,7 @@ namespace WpfTiaProject.ViewModel
     public class ProgressViewModel : ViewModelBase
     {
         public int ThreadId => Thread.CurrentThread.ManagedThreadId;
-        public Action CloseAction { get; set; }
-        public ICommand Cancel { get; }
         public ProgressViewModel()
-        {
-            Cancel = new DelegateCommand(
-                (parameter) => CloseAction?.Invoke());
-
-        }
+        {}
     }
 }

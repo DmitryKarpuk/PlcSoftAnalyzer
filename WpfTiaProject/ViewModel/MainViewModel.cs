@@ -17,6 +17,7 @@ using Siemens.Engineering.HW;
 using Siemens.Engineering.SW;
 using Siemens.Engineering.SW.Tags;
 using WpfTiaProject.Model;
+using WpfTiaProject.Services;
 using WpfTiaProject.View;
 
 
@@ -34,6 +35,7 @@ namespace WpfTiaProject.ViewModel
         private List<TagRefReport> _tagRefReports;
         private bool _isTagCheckSelected;
         private bool _isTiaConnected;
+        private IProgressService _progressService;
         public int ThreadId => Thread.CurrentThread.ManagedThreadId;
         public ObservableCollection<TagTableViewModel> TagTables
         { get { return _tagTables; }
@@ -105,9 +107,11 @@ namespace WpfTiaProject.ViewModel
         public ICommand LoadTagReferencesReport { get; }
         public MainViewModel()
         {
+            var cts = new CancellationToken();
             ProjectInfoViewModel = null;
             TagTables = null;
             TagRefReportViewModel = null;
+            _progressService = new ProgressService<ProgressWindow>(new ProgressViewModel(), cts);
             ConnectTia = new DelegateCommand(
                 (parameter) =>
                 {
@@ -147,7 +151,7 @@ namespace WpfTiaProject.ViewModel
             LoadTagReferencesReport = new DelegateCommand(
                 (parameter) =>
                 {
-                    OpenNewThreadWindow(ExecuteDataLoad);
+                    _progressService.RunWithProgressWindowAsync(ExecuteDataLoad);
                 });
         }
 
@@ -158,31 +162,6 @@ namespace WpfTiaProject.ViewModel
                 _tagRefReports = TiaProject.GeTableTagsRefData(TagTables.Where(table => table.IsSelected).Select(table => table.TagTable).ToList());
                 TagRefReportViewModel = new TagRefReportViewModel(_tagRefReports);
             });
-        }
-
-        private async void OpenNewThreadWindow(Func<CancellationToken, Task> operation)
-        {
-            CancellationTokenSource _cts = new CancellationTokenSource();
-            ProgressWindow window = null;
-            Thread thread = new Thread(() =>
-            {
-                window = new ProgressWindow(new ProgressViewModel());
-                window.Closed += (s, e) =>
-                { 
-                    _cts?.Cancel();
-                    Dispatcher.CurrentDispatcher.InvokeShutdown(); };
-                window.Show();
-                Dispatcher.Run();
-            });
-
-            thread.SetApartmentState(ApartmentState.STA);
-            thread.IsBackground = true;
-            thread.Start();
-            await operation(_cts.Token);
-            if (window != null && window.Dispatcher.Thread.IsAlive)
-            {
-                window.Dispatcher.Invoke(() => window.Close());              
-            }
         }
     }
 }
