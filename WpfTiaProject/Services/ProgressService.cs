@@ -16,22 +16,22 @@ namespace WpfTiaProject.Services
     {
         public TProgressWindow ProgressWindow { get; set; }
         private ViewModelBase _progressViewModel { get; set; }
-        private CancellationTokenSource _cts { get; set; }
         public ProgressService(ViewModelBase viewModel)
         {
             _progressViewModel = viewModel;
         }
         public async Task RunWithProgressWindowAsync(Func<CancellationToken, Task> operation)
         {
-            CancellationTokenSource _cts = new CancellationTokenSource();
+            var cts = new CancellationTokenSource();
             Thread thread = new Thread(() =>
             {
                 ProgressWindow = new TProgressWindow();
                 ProgressWindow.DataContext = _progressViewModel;
                 ProgressWindow.Closed += (s, e) =>
                 {
-                    _cts?.Cancel();
+                    cts?.Cancel();
                     Dispatcher.CurrentDispatcher.InvokeShutdown();
+                    cts.Dispose();
                 };
                 ProgressWindow.Show();
                 Dispatcher.Run();
@@ -40,7 +40,7 @@ namespace WpfTiaProject.Services
             thread.SetApartmentState(ApartmentState.STA);
             thread.IsBackground = true;
             thread.Start();
-            await operation(_cts.Token);
+            await operation(cts.Token);
             if (ProgressWindow != null && ProgressWindow.Dispatcher.Thread.IsAlive)
             {
                 ProgressWindow.Dispatcher.Invoke(() => ProgressWindow.Close());

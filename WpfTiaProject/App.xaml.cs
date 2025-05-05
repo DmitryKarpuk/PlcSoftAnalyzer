@@ -8,6 +8,7 @@ using System.Windows;
 using WpfTiaProject.ViewModel;
 using WpfTiaProject.View;
 using WpfTiaProject.Services;
+using System.Threading;
 
 namespace WpfTiaProject
 {
@@ -24,9 +25,6 @@ namespace WpfTiaProject
             {
                 DataContext = dataContext
             };
-            //var controlProjectInfo = MainWindow.FindName("projectInfoView") as ProjectInfoView;
-            //if (controlProjectInfo != null) 
-            //    controlProjectInfo.DataContext = dataContext.ProjectInfoViewModel;
             MainWindow.Show();
             base.OnStartup(e);
         }

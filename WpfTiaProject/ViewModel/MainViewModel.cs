@@ -107,7 +107,6 @@ namespace WpfTiaProject.ViewModel
         public ICommand LoadTagReferencesReport { get; }
         public MainViewModel(IProgressService progressService)
         {
-            var cts = new CancellationToken();
             ProjectInfoViewModel = null;
             TagTables = null;
             TagRefReportViewModel = null;
@@ -159,7 +158,7 @@ namespace WpfTiaProject.ViewModel
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                _tagRefReports = TiaProject.GeTableTagsRefData(TagTables.Where(table => table.IsSelected).Select(table => table.TagTable).ToList());
+                _tagRefReports = TiaProject.GeTableTagsRefData(TagTables.Where(table => table.IsSelected).Select(table => table.TagTable).ToList(), token);
                 TagRefReportViewModel = new TagRefReportViewModel(_tagRefReports);
             });
         }

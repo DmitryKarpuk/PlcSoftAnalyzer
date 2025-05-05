@@ -42,16 +42,19 @@ namespace WpfTiaProject.ViewModel
                 FontWeight = System.Windows.FontWeights.Bold,
                 TextAlignment = TextAlignment.Center
             });
-            foreach (var source in reportSource)
+            if (reportSource != null)
             {
-                    doc.Blocks.Add(new Paragraph(new Run($"{source.TableName}")) { FontWeight=FontWeights.Bold});
+                foreach (var source in reportSource)
+                {
+                    doc.Blocks.Add(new Paragraph(new Run($"{source.TableName}")) { FontWeight = FontWeights.Bold });
                     foreach (var type in source.TagsRefData)
                     {
                         doc.Blocks.Add(new Paragraph(new Run($"\t{type.Key} tags:")));
-                        foreach(var item in type.Value)
+                        foreach (var item in type.Value)
                             doc.Blocks.Add(new Paragraph(new Run($"\t\t{item.Value} tags have {item.Key} references")) { FontWeight = FontWeights.Thin });
                     }
                     doc.Blocks.Add(new Paragraph(new Run("")));
+                }
             }
             TagRefReport = doc;
         }

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Markup.Localizer;
 using Siemens.Engineering;
 using Siemens.Engineering.CrossReference;
 using Siemens.Engineering.HmiUnified.HmiLogging.HmiLoggingCommon;
@@ -127,8 +129,10 @@ namespace WpfTiaProject.Model
         /// Generate tag reference report data for each PLC tag table.
         /// </summary>
         /// <param name="tables">List of Plc tag rables.</param>
+        /// <param name="token">Token to cancel operation.</param>
         /// <returns>List of reports for each table.</returns>
-        public static List<TagRefReport> GeTableTagsRefData(List<PlcTagTable> tables)
+        /// 
+        public static List<TagRefReport> GeTableTagsRefData(List<PlcTagTable> tables, CancellationToken token)
         {
             var result = new List<TagRefReport>();
             foreach (var table in tables)
@@ -139,6 +143,7 @@ namespace WpfTiaProject.Model
                     var tagsRefData = reportItem.TagsRefData;
                     foreach (var tag in table.Tags)
                     {
+                        if (token.IsCancellationRequested) return null;
                         var tagReferences = TiaProject.CalculateReferences(tag);
                         TagAddressType tagType = DefineTagType(tag);                       
                         if (tagsRefData[tagType].ContainsKey(tagReferences)) tagsRefData[tagType][tagReferences]++;
