@@ -36,7 +36,7 @@ namespace WpfTiaProject.ViewModel
         private void GenerateReport()
         {
             FlowDocument doc = new FlowDocument();
-            doc.Blocks.Add(new Paragraph(new Run("Tag References Report"))
+            doc.Blocks.Add(new Paragraph(new Run("PLC soft analyzer report"))
             {
                 FontSize = 20,
                 FontWeight = System.Windows.FontWeights.Bold,
