@@ -39,11 +39,13 @@
                 </StackPanel>
                 <DockPanel Margin="5" Height="Auto">
                     <TextBlock Text="Input tag limit: "/>
-                    <ComboBox DockPanel.Dock="Right" Width="50" HorizontalAlignment="Right"/>
+                    <ComboBox DockPanel.Dock="Right" Width="50" HorizontalAlignment="Right" SelectedValue="{Binding SelectedInputLimit}"
+                              ItemsSource="{Binding InputLimits}"/>
                 </DockPanel>
                 <DockPanel Margin="5">
                     <TextBlock Text="Output tag limit: " />
-                    <ComboBox DockPanel.Dock="Right" Width="50" HorizontalAlignment="Right" />
+                    <ComboBox DockPanel.Dock="Right" Width="50" HorizontalAlignment="Right" SelectedValue="{Binding SelectedOutputLimit}"
+                              ItemsSource="{Binding OutputLimits}"/>
                 </DockPanel>
                 <Expander Header="Tag tables" IsEnabled="{Binding IsTagCheckSelected, UpdateSourceTrigger=PropertyChanged}"  Margin="5">
                     <ListBox ItemsSource="{Binding TagTables}">

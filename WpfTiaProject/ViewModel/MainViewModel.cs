@@ -32,10 +32,12 @@ namespace WpfTiaProject.ViewModel
         private PlcSoftware _currentPlcSoftware;
         private ObservableCollection<TagTableViewModel> _tagTables;
         private TagRefReportViewModel _tagRefReportViewModel;
-        private List<TagRefReport> _tagRefReports;
         private bool _isTagCheckSelected;
         private bool _isTiaConnected;
+        private int _selectedInputLimit;
+        private int _selectedOutputLimit;
         private IProgressService _progressService;
+        private ITagRefAmalyzerService _referencesAmalyzerService;
         public int ThreadId => Thread.CurrentThread.ManagedThreadId;
         public ObservableCollection<TagTableViewModel> TagTables
         { get { return _tagTables; }
@@ -85,6 +87,32 @@ namespace WpfTiaProject.ViewModel
                 OnPropertyChanged(nameof(IsTiaConnected));
             }
         }
+        public int[] InputLimits => new int[5] {1, 2, 3, 4, 5};
+        public int SelectedInputLimit
+        {
+            get
+            {
+                return _selectedInputLimit;
+            }
+            set
+            {
+                _selectedInputLimit = value;
+                _referencesAmalyzerService.LimitsMap[TagAddressType.Input] = _selectedInputLimit;
+            }
+        }
+        public int[] OutputLimits => new int[5] { 1, 2, 3, 4, 5 };
+        public int SelectedOutputLimit
+        {
+            get
+            {
+                return _selectedOutputLimit;
+            }
+            set
+            {
+                _selectedOutputLimit = value;
+                _referencesAmalyzerService.LimitsMap[TagAddressType.Output] = _selectedOutputLimit;
+            }
+        }
 
         /// <summary>
         /// Command for connecting to opened Tia Portal project. 
@@ -105,12 +133,13 @@ namespace WpfTiaProject.ViewModel
         /// Load and generate report of tag references.
         /// </summary>
         public ICommand LoadTagReferencesReport { get; }
-        public MainViewModel(IProgressService progressService)
+        public MainViewModel(IProgressService progressService, ITagRefAmalyzerService tagRefAmalyzerService)
         {
             ProjectInfoViewModel = null;
             TagTables = null;
-            TagRefReportViewModel = null;
+            TagRefReportViewModel = new TagRefReportViewModel();
             _progressService = progressService;
+            _referencesAmalyzerService = tagRefAmalyzerService;
             ConnectTia = new DelegateCommand(
                 (parameter) =>
                 {
@@ -122,7 +151,6 @@ namespace WpfTiaProject.ViewModel
                     IsTiaConnected = true;
                         
                     });
-
             DisconnectTia = new DelegateCommand(
                 (parameter) =>
                 {
@@ -134,8 +162,6 @@ namespace WpfTiaProject.ViewModel
                     IsTagCheckSelected = false;
                     TagTables.Clear();
                 });
-
-
             LoadTagTables = new DelegateCommand(
                 (parameter) =>
                 {
@@ -145,8 +171,8 @@ namespace WpfTiaProject.ViewModel
                         TagTables = new ObservableCollection<TagTableViewModel>(tagTables.Select(table => new TagTableViewModel(table)));
                     }
                     else TagTables = null;
-    }
-    );
+            }
+            );
             LoadTagReferencesReport = new DelegateCommand(
                 (parameter) =>
                 {
@@ -158,8 +184,10 @@ namespace WpfTiaProject.ViewModel
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                _tagRefReports = TiaProject.GeTableTagsRefData(TagTables.Where(table => table.IsSelected).Select(table => table.TagTable).ToList(), token);
-                TagRefReportViewModel = new TagRefReportViewModel(_tagRefReports);
+                var selectedTables = TagTables.Where(table => table.IsSelected).Select(table => table.TagTable).ToList();
+                _referencesAmalyzerService.LoadTagRefOutOfLimitData(selectedTables, token);
+                TagRefReportViewModel.CleanReport();
+                TagRefReportViewModel.GenerateReport(_referencesAmalyzerService.TagTableRefReportSource);
             });
         }
     }

@@ -21,6 +21,9 @@ namespace WpfTiaProject.Model
     /// </summary>
     public static class TiaProject
     {
+
+        public static readonly TagAddressType[] ReportDataTypes = new TagAddressType[2] { TagAddressType.Input, TagAddressType.Output }; 
+
         /// <summary>
         /// Connection to opened Tia Portal project.
         /// </summary>
@@ -95,84 +98,5 @@ namespace WpfTiaProject.Model
             }
             return tagTables;
           }
-
-        /// <summary>
-        /// Calculate cross references of the PLC tag.
-        /// </summary>
-        /// <param name="tag">PLC tag object</param>
-        /// <returns>Amount of references.</returns>
-        public static int CalculateReferences(PlcTag tag)
-        {
-            int referenceCount = 0;
-            var sources = GetSources(tag);
-            foreach( var source in sources)
-            {
-                referenceCount += source.References.Count;
-            }
-            return referenceCount;
-        }
-
-        /// <summary>
-        /// Get all cross reference sources of the tag
-        /// </summary>
-        /// <param name="tag">PLC tag object.</param>
-        /// <returns>Cross reference sources of the tag.</returns>
-        public static SourceObjectComposition GetSources(PlcTag tag)
-        {
-            var tagRefService = tag.GetService<CrossReferenceService>();
-            var tagRefResult = tagRefService.GetCrossReferences(CrossReferenceFilter.AllObjects);
-            SourceObjectComposition tagRefSources = tagRefResult.Sources;
-            return tagRefSources;
-        }
-
-        /// <summary>
-        /// Generate tag reference report data for each PLC tag table.
-        /// </summary>
-        /// <param name="tables">List of Plc tag rables.</param>
-        /// <param name="token">Token to cancel operation.</param>
-        /// <returns>List of reports for each table.</returns>
-        /// 
-        public static List<TagRefReport> GeTableTagsRefData(List<PlcTagTable> tables, CancellationToken token)
-        {
-            var result = new List<TagRefReport>();
-            foreach (var table in tables)
-            {
-                if (table != null)
-                {
-                    var reportItem = new TagRefReport(table.Name);
-                    var tagsRefData = reportItem.TagsRefData;
-                    foreach (var tag in table.Tags)
-                    {
-                        if (token.IsCancellationRequested) return null;
-                        var tagReferences = TiaProject.CalculateReferences(tag);
-                        TagAddressType tagType = DefineTagType(tag);                       
-                        if (tagsRefData[tagType].ContainsKey(tagReferences)) tagsRefData[tagType][tagReferences]++;
-                        else tagsRefData[tagType][tagReferences] = 1;
-                    }
-                    reportItem.TagsRefData = tagsRefData;
-                    result.Add(reportItem);
-                }
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Define tag type depend of address.
-        /// </summary>
-        /// <param name="tag">PLC tag</param>
-        /// <returns>Taf type.</returns>
-        private static TagAddressType DefineTagType(PlcTag tag)
-        {
-            string tagAdress = tag.LogicalAddress;
-            switch (tagAdress.ToLower()[1])
-            {
-                case 'i': return TagAddressType.Input;
-                case 'q': return TagAddressType.Output;
-                case 'm': return TagAddressType.Merker;
-                case 't': return TagAddressType.Timer;
-                default: return TagAddressType.Undefined;
-            }
-        }
-
     }
 }

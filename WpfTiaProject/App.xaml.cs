@@ -9,6 +9,7 @@ using WpfTiaProject.ViewModel;
 using WpfTiaProject.View;
 using WpfTiaProject.Services;
 using System.Threading;
+using WpfTiaProject.Model;
 
 namespace WpfTiaProject
 {
@@ -17,10 +18,16 @@ namespace WpfTiaProject
     /// </summary>
     public partial class App : Application
     {
+        static readonly Dictionary<Model.TagAddressType, int> LimitsMap = new Dictionary<Model.TagAddressType, int>()
+        {
+            {TagAddressType.Input, 0 },
+            {TagAddressType.Output, 0 }
+        };
         protected override void OnStartup(StartupEventArgs e)
         {
             var propgressService = new ProgressService<ProgressWindow>(new ProgressViewModel());
-            var dataContext = new MainViewModel(propgressService);
+            var refAnalyzerServie = new TagRefAnylizerService(LimitsMap);
+            var dataContext = new MainViewModel(propgressService, refAnalyzerServie);
             MainWindow = new MainWindow()
             {
                 DataContext = dataContext

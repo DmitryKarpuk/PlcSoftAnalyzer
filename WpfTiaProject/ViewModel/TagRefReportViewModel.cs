@@ -18,7 +18,7 @@ namespace WpfTiaProject.ViewModel
     {
         private FlowDocument _tagRefReport;
         //private Dictionary<int, int> _referenceTagsDict;
-        private List<TagRefReport> reportSource;
+        private List<TagTableRefReport> reportSource;
         public FlowDocument TagRefReport
         {
             get { return _tagRefReport; }
@@ -28,7 +28,7 @@ namespace WpfTiaProject.ViewModel
             }
 
         public TagRefReportViewModel() { }
-        public TagRefReportViewModel(List<TagRefReport> report)
+        public TagRefReportViewModel(List<TagTableRefReport> report)
         {
             reportSource = report;
             GenerateReport();
@@ -46,17 +46,25 @@ namespace WpfTiaProject.ViewModel
             {
                 foreach (var source in reportSource)
                 {
+                    var outOfLimitTags = 0;
                     doc.Blocks.Add(new Paragraph(new Run($"{source.TableName}")) { FontWeight = FontWeights.Bold });
-                    foreach (var type in source.TagsRefData)
+                    foreach (var type in source.RefOutOfLimitData)
                     {
-                        doc.Blocks.Add(new Paragraph(new Run($"\t{type.Key} tags:")));
-                        foreach (var item in type.Value)
-                            doc.Blocks.Add(new Paragraph(new Run($"\t\t{item.Value} tags have {item.Key} references")) { FontWeight = FontWeights.Thin });
+                        outOfLimitTags += type.Value.Count;
+                        doc.Blocks.Add(new Paragraph(new Run($"\t {type.Value.Count} {type.Key} tags references out of limit")));
                     }
-                    doc.Blocks.Add(new Paragraph(new Run("")));
+                    if (source.TagsAmount > 0)
+                    {
+                        double invalidTagPercentage = ((double)outOfLimitTags / source.TagsAmount) * 100.0;
+                        doc.Blocks.Add(new Paragraph(new Run($"\t Summury: {invalidTagPercentage:F2}%")));
+                    }
                 }
             }
             TagRefReport = doc;
+        }
+        public void CleanReport()
+        { 
+            TagRefReport.Blocks.Clear(); 
         }
     }
 }

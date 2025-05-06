@@ -83,12 +83,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Model\TagRefReport.cs" />
+    <Compile Include="Model\TagTableRefReport.cs" />
     <Compile Include="Model\TagTable.cs" />
     <Compile Include="Model\TagAddressType.cs" />
     <Compile Include="Model\TiaProject.cs" />
     <Compile Include="Services\IProgressService.cs" />
+    <Compile Include="Services\ITagRefAmalyzerService.cs" />
     <Compile Include="Services\ProgressService.cs" />
+    <Compile Include="Services\TagRefAnylizerService.cs" />
     <Compile Include="ViewModel\DelegateCommand.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ProgressViewModel.cs" />
