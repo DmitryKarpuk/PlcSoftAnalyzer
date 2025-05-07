@@ -1,0 +1,72 @@
+﻿<Window x:Class="PlcSoftAnalyzer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PlcSoftAnalyzer"
+        xmlns:view="clr-namespace:PlcSoftAnalyzer.View"
+        xmlns:vms="clr-namespace:PlcSoftAnalyzer.ViewModel"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="700" Width="1000">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Menu Grid.Row="0" Grid.ColumnSpan="2" Height="25">
+            <MenuItem Header="File" Height="Auto">
+                <MenuItem Header="Connect opened" Command="{Binding ConnectTia}"/>
+                <MenuItem Header="Disconnect project" Command="{Binding DisconnectTia}"/>
+            </MenuItem>
+        </Menu>
+        <view:ProjectInfoView x:Name="projectInfoView" Grid.Row="1" DataContext="{Binding ProjectInfoViewModel}"/>
+        <GroupBox Grid.Row="2">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <CheckBox Content="Check tag references" Command="{Binding LoadTagTables}" CommandParameter="{Binding IsTagCheckSelected}" 
+                              IsChecked="{Binding IsTagCheckSelected}" IsEnabled="{Binding IsTiaConnected, UpdateSourceTrigger=PropertyChanged}" Margin="5" />
+                    <Button Content="Start" Style="{StaticResource WindowsButtonStyle}" Margin="20 0 0 0" Command="{Binding LoadTagReferencesReport}"
+                            IsEnabled="{Binding IsTagCheckSelected, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button Content="Print full report" Style="{StaticResource WindowsButtonStyle}"  Margin="5 0 0 0" IsEnabled="{Binding IsReportDone, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <StackPanel Margin="5" Orientation="Horizontal">
+                    <TextBlock Text="Input tag limit:    " VerticalAlignment="Center"/>
+                    <ComboBox VerticalAlignment="Center" Width="50" SelectedValue="{Binding SelectedInputLimit, Mode=TwoWay}"
+                              ItemsSource="{Binding InputLimits}" IsEnabled="{Binding IsTagCheckSelected, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <StackPanel Margin="5" Orientation="Horizontal">
+                    <TextBlock Text="Output tag limit: " />
+                    <ComboBox VerticalAlignment="Center" Width="50" SelectedValue="{Binding SelectedOutputLimit, Mode=TwoWay}"
+                              ItemsSource="{Binding OutputLimits}" IsEnabled="{Binding IsTagCheckSelected, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <Expander Header="Tag tables" IsEnabled="{Binding IsTagCheckSelected, UpdateSourceTrigger=PropertyChanged}"  Margin="5">
+                    <ListBox ItemsSource="{Binding TagTables}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                    <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>   
+                </Expander>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" MinWidth="300"
+                  Padding="10" Header="Report" x:Name="ReportView" DataContext="{Binding TagRefReportViewModel}">
+            <FlowDocumentReader Document="{Binding TagRefReport}"/>
+        </GroupBox>
+
+        <StatusBar Grid.Row="15" Grid.ColumnSpan="2" Height="25" VerticalAlignment="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="{Binding Path=ThreadId, StringFormat=Thread Id : {0}}"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>
