@@ -27,7 +27,6 @@
                 <MenuItem Header="Disconnect project" Command="{Binding DisconnectTia}"/>
             </MenuItem>
         </Menu>
-        <!--<view:ProjectInfo x:Name="projectInfoView" Grid.Row="1" DataContext="{Binding ProjectInfoViewModel}"/>-->
         <view:ProjectInfoView x:Name="projectInfoView" Grid.Row="1" DataContext="{Binding ProjectInfoViewModel}"/>
         <GroupBox Grid.Row="2">
             <StackPanel>
@@ -37,16 +36,16 @@
                     <Button Content="Start" Style="{StaticResource WindowsButtonStyle}" Margin="20 0 0 0" Command="{Binding LoadTagReferencesReport}"
                             IsEnabled="{Binding IsTagCheckSelected, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
-                <DockPanel Margin="5" Height="Auto">
-                    <TextBlock Text="Input tag limit: "/>
-                    <ComboBox DockPanel.Dock="Right" Width="50" HorizontalAlignment="Right" SelectedValue="{Binding SelectedInputLimit}"
-                              ItemsSource="{Binding InputLimits}"/>
-                </DockPanel>
-                <DockPanel Margin="5">
+                <StackPanel Margin="5" Orientation="Horizontal">
+                    <TextBlock Text="Input tag limit:    " VerticalAlignment="Center"/>
+                    <ComboBox VerticalAlignment="Center" Width="50" SelectedValue="{Binding SelectedInputLimit, Mode=TwoWay}"
+                              ItemsSource="{Binding InputLimits}" IsEnabled="{Binding IsTagCheckSelected, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <StackPanel Margin="5" Orientation="Horizontal">
                     <TextBlock Text="Output tag limit: " />
-                    <ComboBox DockPanel.Dock="Right" Width="50" HorizontalAlignment="Right" SelectedValue="{Binding SelectedOutputLimit}"
-                              ItemsSource="{Binding OutputLimits}"/>
-                </DockPanel>
+                    <ComboBox VerticalAlignment="Center" Width="50" SelectedValue="{Binding SelectedOutputLimit, Mode=TwoWay}"
+                              ItemsSource="{Binding OutputLimits}" IsEnabled="{Binding IsTagCheckSelected, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
                 <Expander Header="Tag tables" IsEnabled="{Binding IsTagCheckSelected, UpdateSourceTrigger=PropertyChanged}"  Margin="5">
                     <ListBox ItemsSource="{Binding TagTables}">
                         <ListBox.ItemTemplate>

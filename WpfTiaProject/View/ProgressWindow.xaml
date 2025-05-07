@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfTiaProject.View"
         mc:Ignorable="d"
-        WindowStartupLocation="CenterOwner"
-        Title="ProgressWindow" Height="Auto" Width="340">
+        WindowStartupLocation="CenterScreen"
+        Title="ProgressWindow" Height="110" Width="350">
     <StackPanel Height="Auto">
         <StackPanel Margin="10">
             <ProgressBar Height="20" Minimum="0" Maximum="100" Margin="0,0,0,10" IsIndeterminate="True"/>

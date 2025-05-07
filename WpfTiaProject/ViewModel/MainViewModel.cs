@@ -137,9 +137,10 @@ namespace WpfTiaProject.ViewModel
         {
             ProjectInfoViewModel = null;
             TagTables = null;
-            TagRefReportViewModel = new TagRefReportViewModel();
             _progressService = progressService;
             _referencesAmalyzerService = tagRefAmalyzerService;
+            SelectedInputLimit = 2;
+            SelectedOutputLimit = 1;
             ConnectTia = new DelegateCommand(
                 (parameter) =>
                 {
@@ -154,13 +155,16 @@ namespace WpfTiaProject.ViewModel
             DisconnectTia = new DelegateCommand(
                 (parameter) =>
                 {
-                    _tiaPortal.Dispose();
-                    _tiaPortal = null;
-                    _currentProject = null;
-                    ProjectInfoViewModel = null;
-                    IsTiaConnected = false;
-                    IsTagCheckSelected = false;
-                    TagTables.Clear();
+                    if (_tiaPortal != null)
+                    {
+                        _tiaPortal.Dispose();
+                        _tiaPortal = null;
+                        _currentProject = null;
+                        ProjectInfoViewModel = null;
+                        IsTiaConnected = false;
+                        IsTagCheckSelected = false;
+                        TagTables.Clear();
+                    }
                 });
             LoadTagTables = new DelegateCommand(
                 (parameter) =>
@@ -186,8 +190,8 @@ namespace WpfTiaProject.ViewModel
             {
                 var selectedTables = TagTables.Where(table => table.IsSelected).Select(table => table.TagTable).ToList();
                 _referencesAmalyzerService.LoadTagRefOutOfLimitData(selectedTables, token);
-                TagRefReportViewModel.CleanReport();
-                TagRefReportViewModel.GenerateReport(_referencesAmalyzerService.TagTableRefReportSource);
+                TagRefReportViewModel = new TagRefReportViewModel(_referencesAmalyzerService.TagTableRefReportSource);
+                TagRefReportViewModel.GenerateReport();
             });
         }
     }

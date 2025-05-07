@@ -33,7 +33,7 @@ namespace WpfTiaProject.ViewModel
             reportSource = report;
             GenerateReport();
         }
-        private void GenerateReport()
+        public void GenerateReport()
         {
             FlowDocument doc = new FlowDocument();
             doc.Blocks.Add(new Paragraph(new Run("PLC soft analyzer report"))
@@ -56,7 +56,7 @@ namespace WpfTiaProject.ViewModel
                     if (source.TagsAmount > 0)
                     {
                         double invalidTagPercentage = ((double)outOfLimitTags / source.TagsAmount) * 100.0;
-                        doc.Blocks.Add(new Paragraph(new Run($"\t Summury: {invalidTagPercentage:F2}%")));
+                        doc.Blocks.Add(new Paragraph(new Run($"\t Summury: {invalidTagPercentage:F2}% ({outOfLimitTags} from {source.TagsAmount})")));
                     }
                 }
             }

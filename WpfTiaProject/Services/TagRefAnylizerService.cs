@@ -37,15 +37,17 @@ namespace WpfTiaProject.Services
                     {
                         if (token.IsCancellationRequested) return ;
                         var tagType = DefineTagType(tag);
-                        int typeLimit = LimitsMap[tagType];
-                        if (_analizedTypes.Contains(tagType))
+                        if (LimitsMap.ContainsKey(tagType))
                         {
+                            int typeLimit = LimitsMap[tagType];
                             var tagReferences = CalculateReferences(tag);
                             if (tagReferences > typeLimit || tagReferences <= 0)
-                                if(reportItem.RefOutOfLimitData.ContainsKey(tagType))
-                                    reportItem.RefOutOfLimitData[tagType].Add(tag);
+                            {
+                                if (reportItem.RefOutOfLimitData.ContainsKey(tagType)) reportItem.RefOutOfLimitData[tagType].Add(tag);
                                 else reportItem.RefOutOfLimitData[tagType] = new List<PlcTag> { tag };
+                            }
                         }
+                        else continue;
                     }
                     TagTableRefReportSource.Add(reportItem);
                 }               
