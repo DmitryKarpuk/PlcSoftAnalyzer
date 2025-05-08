@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:PlcSoftAnalyzer"
         xmlns:view="clr-namespace:PlcSoftAnalyzer.View"
         xmlns:vms="clr-namespace:PlcSoftAnalyzer.ViewModel"
+        xmlns:controls="clr-namespace:PlcSoftAnalyzer.Views.Controls"
         mc:Ignorable="d"
         Title="MainWindow" Height="700" Width="1000">
     <Grid>
@@ -60,7 +61,7 @@
         </GroupBox>
         <GroupBox Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" MinWidth="300"
                   Padding="10" Header="Report" x:Name="ReportView" DataContext="{Binding TagRefReportViewModel}">
-            <FlowDocumentReader Document="{Binding TagRefReport}"/>
+            <controls:CustomDocumentFlow ItemsSource="{Binding Items}"/>
         </GroupBox>
 
         <StatusBar Grid.Row="15" Grid.ColumnSpan="2" Height="25" VerticalAlignment="Bottom">
