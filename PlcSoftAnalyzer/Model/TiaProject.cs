@@ -13,6 +13,7 @@ using Siemens.Engineering.HW.Features;
 using Siemens.Engineering.SW;
 using Siemens.Engineering.SW.Tags;
 using PlcSoftAnalyzer.ViewModel;
+using System.Globalization;
 
 namespace PlcSoftAnalyzer.Model
 {

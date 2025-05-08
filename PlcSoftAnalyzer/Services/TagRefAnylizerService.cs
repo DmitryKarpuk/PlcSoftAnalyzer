@@ -12,7 +12,6 @@ namespace PlcSoftAnalyzer.Services
 {
     public class TagRefAnylizerService : ITagRefAmalyzerService
     {
-        private List<TagAddressType> _analizedTypes => LimitsMap.Keys.ToList();
         public List<TagTableRefReport> TagTableRefReportSource {  get; private set; }
         public  Dictionary<TagAddressType, int> LimitsMap { get; set; }
 
@@ -43,8 +42,11 @@ namespace PlcSoftAnalyzer.Services
                             var tagReferences = CalculateReferences(tag);
                             if (tagReferences > typeLimit || tagReferences <= 0)
                             {
-                                if (reportItem.RefOutOfLimitData.ContainsKey(tagType)) reportItem.RefOutOfLimitData[tagType].Add(tag);
-                                else reportItem.RefOutOfLimitData[tagType] = new List<PlcTag> { tag };
+                                var tagInfo = new PlcTagInfo(tag.Name, tag.LogicalAddress, tagReferences);
+                                if (reportItem.RefOutOfLimitData.ContainsKey(tagType)) 
+                                    reportItem.RefOutOfLimitData[tagType].Add(tagInfo);
+                                else 
+                                    reportItem.RefOutOfLimitData[tagType] = new List<PlcTagInfo> { tagInfo };
                             }
                         }
                         else continue;

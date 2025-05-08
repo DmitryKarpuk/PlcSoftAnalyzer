@@ -107,6 +107,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\PlcTagInfo.cs" />
     <Compile Include="Model\TagTableRefReport.cs" />
     <Compile Include="Model\TagTable.cs" />
     <Compile Include="Model\TagAddressType.cs" />

@@ -16,15 +16,15 @@ namespace PlcSoftAnalyzer.Model
         public string TableName {  get; set; }
         public int TagsAmount { get; set; }
 
-        public Dictionary<TagAddressType, List<PlcTag>> RefOutOfLimitData { get; set; }
+        public Dictionary<TagAddressType, List<PlcTagInfo>> RefOutOfLimitData { get; set; }
         public TagTableRefReport() { }
         public TagTableRefReport(string name, int tagsAmount)
         {
             TableName = name;
             TagsAmount = tagsAmount;
-            RefOutOfLimitData = new Dictionary<TagAddressType, List<PlcTag>>();
+            RefOutOfLimitData = new Dictionary<TagAddressType, List<PlcTagInfo>>();
         }
-        public TagTableRefReport(string Name, Dictionary<TagAddressType, List<PlcTag>> refOutOfLimitData)
+        public TagTableRefReport(string Name, Dictionary<TagAddressType, List<PlcTagInfo>> refOutOfLimitData)
         {
             TableName = Name;
             RefOutOfLimitData = refOutOfLimitData;
