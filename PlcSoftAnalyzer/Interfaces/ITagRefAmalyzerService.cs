@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Siemens.Engineering.SW.Tags;
 using PlcSoftAnalyzer.Model;
 
-namespace PlcSoftAnalyzer.Services
+namespace PlcSoftAnalyzer.Interfaces
 {
     public interface ITagRefAmalyzerService
     {

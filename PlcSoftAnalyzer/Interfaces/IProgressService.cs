@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PlcSoftAnalyzer.Services
+namespace PlcSoftAnalyzer.Interfaces
 {
     public interface IProgressService
     {

@@ -56,7 +56,7 @@ namespace PlcSoftAnalyzer.ViewModel
                     if (source.TagsAmount > 0)
                     {
                         double invalidTagPercentage = ((double)outOfLimitTags / source.TagsAmount) * 100.0;
-                        doc.Blocks.Add(new Paragraph(new Run($"\t Summury: {invalidTagPercentage:F2}% ({outOfLimitTags} from {source.TagsAmount})")));
+                        doc.Blocks.Add(new Paragraph(new Run($"\t Summury: {invalidTagPercentage:F2}% ({outOfLimitTags} out of {source.TagsAmount})")));
                     }
                 }
             }

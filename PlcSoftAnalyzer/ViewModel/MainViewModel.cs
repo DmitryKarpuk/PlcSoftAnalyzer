@@ -18,6 +18,7 @@ using Siemens.Engineering.SW;
 using Siemens.Engineering.SW.Tags;
 using PlcSoftAnalyzer.Model;
 using PlcSoftAnalyzer.Services;
+using PlcSoftAnalyzer.Interfaces;
 using PlcSoftAnalyzer.View;
 
 

@@ -8,6 +8,7 @@ using System.Windows;
 using PlcSoftAnalyzer.ViewModel;
 using PlcSoftAnalyzer.View;
 using PlcSoftAnalyzer.Services;
+using PlcSoftAnalyzer.Interfaces;
 using System.Threading;
 using PlcSoftAnalyzer.Model;
 

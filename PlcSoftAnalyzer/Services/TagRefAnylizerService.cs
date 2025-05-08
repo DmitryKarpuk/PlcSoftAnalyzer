@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Siemens.Engineering.CrossReference;
 using Siemens.Engineering.SW.Tags;
 using PlcSoftAnalyzer.Model;
+using PlcSoftAnalyzer.Interfaces;
 
 namespace PlcSoftAnalyzer.Services
 {

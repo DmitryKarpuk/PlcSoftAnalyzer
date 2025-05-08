@@ -113,9 +113,9 @@
     <Compile Include="Model\TagAddressType.cs" />
     <Compile Include="Model\TiaProject.cs" />
     <Compile Include="Services\FileDialogService.cs" />
-    <Compile Include="Services\IFileDialogService.cs" />
-    <Compile Include="Services\IProgressService.cs" />
-    <Compile Include="Services\ITagRefAmalyzerService.cs" />
+    <Compile Include="Interfaces\IFileDialogService.cs" />
+    <Compile Include="Interfaces\IProgressService.cs" />
+    <Compile Include="Interfaces\ITagRefAmalyzerService.cs" />
     <Compile Include="Services\ProgressService.cs" />
     <Compile Include="Services\TagRefAnylizerService.cs" />
     <Compile Include="ViewModel\DelegateCommand.cs" />
