@@ -46,17 +46,24 @@ namespace PlcSoftAnalyzer.ViewModel
             {
                 foreach (var source in reportSource)
                 {
-                    var outOfLimitTags = 0;
-                    doc.Blocks.Add(new Paragraph(new Run($"{source.TableName}")) { FontWeight = FontWeights.Bold });
-                    foreach (var type in source.RefOutOfLimitData)
+                    doc.Blocks.Add(new Paragraph(new Run($"{source.Name}")) { FontWeight = FontWeights.Bold });
+                    var RefTypesMap = new Dictionary<TagAddressType, int>();
+                    foreach (var tag in source.RefOutOfLimitData)
                     {
-                        outOfLimitTags += type.Value.Count;
-                        doc.Blocks.Add(new Paragraph(new Run($"\t {type.Value.Count} {type.Key} tags references out of limit")));
+                        if (RefTypesMap.ContainsKey(tag.AddressType)) RefTypesMap[tag.AddressType]++;
+                        else RefTypesMap[tag.AddressType] = 1;
                     }
+
+                    RefTypesMap.ToList().ForEach(item =>
+                    {
+                        doc.Blocks.Add(new Paragraph(new Run($"\t {item.Value} {item.Key} tags references out of limit")));
+                    });
+
                     if (source.TagsAmount > 0)
                     {
-                        double invalidTagPercentage = ((double)outOfLimitTags / source.TagsAmount) * 100.0;
-                        doc.Blocks.Add(new Paragraph(new Run($"\t Summury: {invalidTagPercentage:F2}% ({outOfLimitTags} out of {source.TagsAmount})")));
+                        double invalidTagPercentage = ((double)source.RefOutOfLimitData.Count / source.TagsAmount) * 100.0;
+                        doc.Blocks.Add(new Paragraph(new Run($"\t Summury: {invalidTagPercentage:F2}% " +
+                            $"({source.RefOutOfLimitData.Count} out of {source.TagsAmount})")));
                     }
                 }
             }

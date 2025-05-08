@@ -13,20 +13,20 @@ namespace PlcSoftAnalyzer.Model
     /// </summary>
     public class TagTableRefReport
     {
-        public string TableName {  get; set; }
+        public string Name {  get; set; }
         public int TagsAmount { get; set; }
 
-        public Dictionary<TagAddressType, List<PlcTagInfo>> RefOutOfLimitData { get; set; }
+        public List<PlcTagInfo> RefOutOfLimitData { get; set; }
         public TagTableRefReport() { }
         public TagTableRefReport(string name, int tagsAmount)
         {
-            TableName = name;
+            Name = name;
             TagsAmount = tagsAmount;
-            RefOutOfLimitData = new Dictionary<TagAddressType, List<PlcTagInfo>>();
+            RefOutOfLimitData = new List<PlcTagInfo>();
         }
-        public TagTableRefReport(string Name, Dictionary<TagAddressType, List<PlcTagInfo>> refOutOfLimitData)
+        public TagTableRefReport(string Name, List<PlcTagInfo> refOutOfLimitData)
         {
-            TableName = Name;
+            this.Name = Name;
             RefOutOfLimitData = refOutOfLimitData;
         }
     }

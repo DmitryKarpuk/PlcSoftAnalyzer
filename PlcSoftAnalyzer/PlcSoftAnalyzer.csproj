@@ -112,6 +112,7 @@
     <Compile Include="Model\TagTable.cs" />
     <Compile Include="Model\TagAddressType.cs" />
     <Compile Include="Model\TiaProject.cs" />
+    <Compile Include="Services\ExcelReportService.cs" />
     <Compile Include="Services\FileDialogService.cs" />
     <Compile Include="Interfaces\IFileDialogService.cs" />
     <Compile Include="Interfaces\IProgressService.cs" />

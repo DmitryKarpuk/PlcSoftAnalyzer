@@ -43,11 +43,8 @@ namespace PlcSoftAnalyzer.Services
                             var tagReferences = CalculateReferences(tag);
                             if (tagReferences > typeLimit || tagReferences <= 0)
                             {
-                                var tagInfo = new PlcTagInfo(tag.Name, tag.LogicalAddress, tagReferences);
-                                if (reportItem.RefOutOfLimitData.ContainsKey(tagType)) 
-                                    reportItem.RefOutOfLimitData[tagType].Add(tagInfo);
-                                else 
-                                    reportItem.RefOutOfLimitData[tagType] = new List<PlcTagInfo> { tagInfo };
+                                var tagInfo = new PlcTagInfo(tag.Name, tag.LogicalAddress, tagReferences, tagType);
+                                reportItem.RefOutOfLimitData.Add(tagInfo);
                             }
                         }
                         else continue;
@@ -57,23 +54,7 @@ namespace PlcSoftAnalyzer.Services
             }
         }
 
-        /// <summary>
-        /// Define tag type depend of address.
-        /// </summary>
-        /// <param name="tag">PLC tag</param>
-        /// <returns>Taf type.</returns>
-        private static TagAddressType DefineTagType(PlcTag tag)
-        {
-            string tagAdress = tag.LogicalAddress;
-            switch (tagAdress.ToLower()[1])
-            {
-                case 'i': return TagAddressType.Input;
-                case 'q': return TagAddressType.Output;
-                case 'm': return TagAddressType.Merker;
-                case 't': return TagAddressType.Timer;
-                default: return TagAddressType.Undefined;
-            }
-        }
+
 
         /// <summary>
         /// Calculate cross references of the PLC tag.
@@ -102,6 +83,24 @@ namespace PlcSoftAnalyzer.Services
             var tagRefResult = tagRefService.GetCrossReferences(CrossReferenceFilter.AllObjects);
             SourceObjectComposition tagRefSources = tagRefResult.Sources;
             return tagRefSources;
+        }
+
+        /// <summary>
+        /// Define tag type depend of address.
+        /// </summary>
+        /// <param name="tag">PLC tag</param>
+        /// <returns>Taf type.</returns>
+        private static TagAddressType DefineTagType(PlcTag tag)
+        {
+            var tagAddress = tag.LogicalAddress;
+            switch (tagAddress.ToLower()[1])
+            {
+                case 'i': return TagAddressType.Input;
+                case 'q': return TagAddressType.Output;
+                case 'm': return TagAddressType.Merker;
+                case 't': return TagAddressType.Timer;
+                default: return TagAddressType.Undefined;
+            }
         }
     }
 }
