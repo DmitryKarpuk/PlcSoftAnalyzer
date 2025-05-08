@@ -26,6 +26,9 @@ namespace PlcSoftAnalyzer.Services
         public bool SaveFileDialog()
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = "PlcSoftAnalyzerReport";
+            saveFileDialog.DefaultExt = ".xlsx";
+            saveFileDialog.Filter = "Excel Worksheets |*.xlsx; *.xlsm";
             if (saveFileDialog.ShowDialog() == true)
             {
                 FilePath = saveFileDialog.FileName;

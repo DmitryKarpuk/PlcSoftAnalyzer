@@ -35,7 +35,7 @@
                               IsChecked="{Binding IsTagCheckSelected}" IsEnabled="{Binding IsTiaConnected, UpdateSourceTrigger=PropertyChanged}" Margin="5" />
                     <Button Content="Start" Style="{StaticResource WindowsButtonStyle}" Margin="20 0 0 0" Command="{Binding LoadTagReferencesReport}"
                             IsEnabled="{Binding IsTagCheckSelected, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button Content="Print full report" Style="{StaticResource WindowsButtonStyle}"  Margin="5 0 0 0" IsEnabled="{Binding IsReportDone, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button Content="Print full report" Command="{Binding PrintReport}" Style="{StaticResource WindowsButtonStyle}"  Margin="5 0 0 0" IsEnabled="{Binding IsReportDone, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
                 <StackPanel Margin="5" Orientation="Horizontal">
                     <TextBlock Text="Input tag limit:    " VerticalAlignment="Center"/>

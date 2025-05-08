@@ -27,7 +27,8 @@ namespace PlcSoftAnalyzer
         {
             var propgressService = new ProgressService<ProgressWindow>(new ProgressViewModel());
             var refAnalyzerServie = new TagRefAnylizerService(LimitsMap);
-            var dataContext = new MainViewModel(propgressService, refAnalyzerServie);
+            var fileDialogService = new FileDialogService();
+            var dataContext = new MainViewModel(propgressService, refAnalyzerServie, fileDialogService);
             MainWindow = new MainWindow()
             {
                 DataContext = dataContext

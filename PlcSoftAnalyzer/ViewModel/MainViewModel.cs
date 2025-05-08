@@ -39,6 +39,7 @@ namespace PlcSoftAnalyzer.ViewModel
         private int _selectedOutputLimit;
         private IProgressService _progressService;
         private ITagRefAmalyzerService _referencesAmalyzerService;
+        private IFileDialogService _fileDialogService;
         public int ThreadId => Thread.CurrentThread.ManagedThreadId;
         public ObservableCollection<TagTableViewModel> TagTables
         { get { return _tagTables; }
@@ -116,11 +117,14 @@ namespace PlcSoftAnalyzer.ViewModel
         }
         public bool IsReportDone
         {
-            get { return _isReportDone; }
+            get 
+            {
+                return _isReportDone; 
+            }
             set
             {
                 _isReportDone = value;
-                OnPropertyChanged(nameof(_isReportDone));
+                OnPropertyChanged(nameof(IsReportDone));
             }
         }
 
@@ -143,11 +147,17 @@ namespace PlcSoftAnalyzer.ViewModel
         /// Load and generate report of tag references.
         /// </summary>
         public ICommand LoadTagReferencesReport { get; }
-        public MainViewModel(IProgressService progressService, ITagRefAmalyzerService tagRefAmalyzerService)
+
+        /// <summary>
+        /// Print full report in excel
+        /// </summary>
+        public ICommand PrintReport { get; }
+
+        public MainViewModel(IProgressService progressService, ITagRefAmalyzerService tagRefAmalyzerService, IFileDialogService fileDialogService)
         {
-            ProjectInfoViewModel = null;
-            TagTables = null;
+            IsReportDone = false;
             _progressService = progressService;
+            _fileDialogService = fileDialogService;
             _referencesAmalyzerService = tagRefAmalyzerService;
             SelectedInputLimit = 2;
             SelectedOutputLimit = 1;
@@ -160,8 +170,8 @@ namespace PlcSoftAnalyzer.ViewModel
                     _currentPlcSoftware = TiaProject.GetCurrentPlcSoftware(_currentCPU);
                     ProjectInfoViewModel = new ProjectInfoViewModel(_currentProject, _currentCPU);
                     IsTiaConnected = true;
-                        
-                    });
+
+                });
             DisconnectTia = new DelegateCommand(
                 (parameter) =>
                 {
@@ -173,6 +183,7 @@ namespace PlcSoftAnalyzer.ViewModel
                         ProjectInfoViewModel = null;
                         IsTiaConnected = false;
                         IsTagCheckSelected = false;
+                        IsReportDone = false;
                         TagTables.Clear();
                     }
                 });
@@ -185,23 +196,41 @@ namespace PlcSoftAnalyzer.ViewModel
                         TagTables = new ObservableCollection<TagTableViewModel>(tagTables.Select(table => new TagTableViewModel(table)));
                     }
                     else TagTables = null;
-            }
+                }
             );
             LoadTagReferencesReport = new DelegateCommand(
                 (parameter) =>
                 {
                     _progressService.RunWithProgressWindowAsync(ExecuteDataLoad);
                 });
+            PrintReport = new DelegateCommand(
+                (parameter) =>
+                {
+                    if (_fileDialogService.SaveFileDialog() == true)
+                    {
+                        MessageBox.Show(_fileDialogService.FilePath);
+                    }
+                }
+                );
         }
 
         private async Task ExecuteDataLoad(CancellationToken token)
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                var selectedTables = TagTables.Where(table => table.IsSelected).Select(table => table.TagTable).ToList();
-                _referencesAmalyzerService.LoadTagRefOutOfLimitData(selectedTables, token);
-                TagRefReportViewModel = new TagRefReportViewModel(_referencesAmalyzerService.TagTableRefReportSource);
-                TagRefReportViewModel.GenerateReport();
+                try
+                {
+                    var selectedTables = TagTables.Where(table => table.IsSelected).Select(table => table.TagTable).ToList();
+                    _referencesAmalyzerService.LoadTagRefOutOfLimitData(selectedTables, token);
+                    TagRefReportViewModel = new TagRefReportViewModel(_referencesAmalyzerService.TagTableRefReportSource);
+                    TagRefReportViewModel.GenerateReport();
+                    IsReportDone = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Generation error.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                
             });
         }
     }
