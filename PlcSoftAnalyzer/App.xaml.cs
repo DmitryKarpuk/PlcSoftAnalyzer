@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using PlcSoftAnalyzer.ViewModel;
-using PlcSoftAnalyzer.View;
+using PlcSoftAnalyzer.Views;
 using PlcSoftAnalyzer.Services;
 using PlcSoftAnalyzer.Interfaces;
 using System.Threading;
@@ -29,7 +29,8 @@ namespace PlcSoftAnalyzer
             var propgressService = new ProgressService<ProgressWindow>(new ProgressViewModel());
             var refAnalyzerServie = new TagRefAnylizerService(LimitsMap);
             var fileDialogService = new FileDialogService();
-            var dataContext = new MainViewModel(propgressService, refAnalyzerServie, fileDialogService);
+            var excelReportService = new ExcelReportService();
+            var dataContext = new MainViewModel(propgressService, refAnalyzerServie, fileDialogService, excelReportService);
             MainWindow = new MainWindow()
             {
                 DataContext = dataContext

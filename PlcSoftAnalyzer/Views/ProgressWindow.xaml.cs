@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using PlcSoftAnalyzer.ViewModel;
 
-namespace PlcSoftAnalyzer.View
+namespace PlcSoftAnalyzer.Views
 {
     public partial class ProgressWindow : Window
     {

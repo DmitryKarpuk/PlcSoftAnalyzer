@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using PlcSoftAnalyzer.ViewModel;
 
-namespace PlcSoftAnalyzer.View
+namespace PlcSoftAnalyzer.Views
 {
     /// <summary>
     /// Interaction logic for TagReferencesReportView.xaml

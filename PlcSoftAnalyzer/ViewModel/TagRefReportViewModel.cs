@@ -11,6 +11,7 @@ using System.Windows.Input;
 using Siemens.Engineering.SW.Tags;
 using Siemens.Engineering.VersionControl;
 using PlcSoftAnalyzer.Model;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace PlcSoftAnalyzer.ViewModel
 {
@@ -18,7 +19,7 @@ namespace PlcSoftAnalyzer.ViewModel
     {
         private FlowDocument _tagRefReport;
         
-        private ObservableCollection<TagTableRefReport> Items { get; }
+        public ObservableCollection<TagTableRefReport> Items { get;}
         public FlowDocument TagRefReport
         {
             get => _tagRefReport;
@@ -29,7 +30,10 @@ namespace PlcSoftAnalyzer.ViewModel
             }
         }
 
-        public TagRefReportViewModel() { }
+        public TagRefReportViewModel()
+        {
+            Items = new ObservableCollection<TagTableRefReport>();
+        }
         
         public TagRefReportViewModel(List<TagTableRefReport> report)
         {

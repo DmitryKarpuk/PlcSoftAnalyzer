@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace PlcSoftAnalyzer.View
+namespace PlcSoftAnalyzer.Views
 {
     /// <summary>
     /// Interaction logic for ProjectInfoView.xaml

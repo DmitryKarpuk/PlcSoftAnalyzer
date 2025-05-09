@@ -19,7 +19,7 @@ using Siemens.Engineering.SW.Tags;
 using PlcSoftAnalyzer.Model;
 using PlcSoftAnalyzer.Services;
 using PlcSoftAnalyzer.Interfaces;
-using PlcSoftAnalyzer.View;
+using PlcSoftAnalyzer.Views;
 
 
 namespace PlcSoftAnalyzer.ViewModel
@@ -41,6 +41,7 @@ namespace PlcSoftAnalyzer.ViewModel
         private IProgressService _progressService;
         private ITagRefAmalyzerService _referencesAmalyzerService;
         private IFileDialogService _fileDialogService;
+        private IExcelReportService _excelReportService;
         public int ThreadId => Thread.CurrentThread.ManagedThreadId;
         public ObservableCollection<TagTableViewModel> TagTables
         { get { return _tagTables; }
@@ -154,12 +155,14 @@ namespace PlcSoftAnalyzer.ViewModel
         /// </summary>
         public ICommand PrintReport { get; }
 
-        public MainViewModel(IProgressService progressService, ITagRefAmalyzerService tagRefAmalyzerService, IFileDialogService fileDialogService)
+        public MainViewModel(IProgressService progressService, ITagRefAmalyzerService tagRefAmalyzerService, 
+                            IFileDialogService fileDialogService, IExcelReportService excelReportService)
         {
             IsReportDone = false;
             _progressService = progressService;
             _fileDialogService = fileDialogService;
             _referencesAmalyzerService = tagRefAmalyzerService;
+            _excelReportService = excelReportService;
             SelectedInputLimit = 2;
             SelectedOutputLimit = 1;
             ConnectTia = new DelegateCommand(
@@ -209,10 +212,18 @@ namespace PlcSoftAnalyzer.ViewModel
                 {
                     if (_fileDialogService.SaveFileDialog() == true)
                     {
-                        MessageBox.Show(_fileDialogService.FilePath);
+                        try
+                        {
+                            excelReportService.PrintRefAnaylyzerReport(_fileDialogService.FilePath, _referencesAmalyzerService.TagTableRefReportSource);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Print error.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
                 }
                 );
+            _excelReportService = excelReportService;
         }
 
         private async Task ExecuteDataLoad(CancellationToken token)
@@ -223,8 +234,11 @@ namespace PlcSoftAnalyzer.ViewModel
                 {
                     var selectedTables = TagTables.Where(table => table.IsSelected).Select(table => table.TagTable).ToList();
                     _referencesAmalyzerService.LoadTagRefOutOfLimitData(selectedTables, token);
-                    TagRefReportViewModel = new TagRefReportViewModel(_referencesAmalyzerService.TagTableRefReportSource);
-                    TagRefReportViewModel.GenerateReport();
+                    TagRefReportViewModel = new TagRefReportViewModel();
+                    _referencesAmalyzerService.TagTableRefReportSource.ForEach(table => {
+                        TagRefReportViewModel.Items.Add(table);
+                        });
+                    ;
                     IsReportDone = true;
                 }
                 catch (Exception ex)

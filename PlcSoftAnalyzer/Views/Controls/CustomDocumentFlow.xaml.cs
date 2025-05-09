@@ -18,13 +18,8 @@ namespace PlcSoftAnalyzer.Views.Controls
         
         public ObservableCollection<TagTableRefReport> ItemsSource
         {
-            set
-            {
-                if (value == null)
-                    ClearValue(ItemsSourceProperty);
-                else
-                    SetValue(ItemsSourceProperty, value);
-            }
+            get { return (ObservableCollection<TagTableRefReport>)GetValue(ItemsSourceProperty); }
+            set { SetValue(ItemsSourceProperty, value); }
         }
 
         public CustomDocumentFlow()
@@ -72,41 +67,35 @@ namespace PlcSoftAnalyzer.Views.Controls
 
         private void CollectionOnCollectionChanged(object _, NotifyCollectionChangedEventArgs e)
         {
-            if (e.NewItems is not ObservableCollection<TagTableRefReport> colection)
+            foreach (var item in e.NewItems)
             {
-                return;
-            }
-            
-            foreach (var report in colection)
-            {
-                Document.Blocks.Add(new Paragraph(new Run($"{report.Name}")) { FontWeight = FontWeights.Bold });
-                var refTypesMap = new Dictionary<TagAddressType, int>();
-                foreach (var tag in report.RefOutOfLimitData)
+                if (item is not TagTableRefReport report) continue;
+                else
                 {
-                    if (refTypesMap.ContainsKey(tag.AddressType)) refTypesMap[tag.AddressType]++;
-                    else refTypesMap[tag.AddressType] = 1;
-                }
-
-                refTypesMap
-                    .ToList()
-                    .ForEach(item =>
+                    Document.Blocks.Add(new Paragraph(new Run($"{report.Name}")) { FontWeight = FontWeights.Bold });
+                    var refTypesMap = new Dictionary<TagAddressType, int>();
+                    foreach (var tag in report.RefOutOfLimitData)
                     {
-                        Document.Blocks.Add(new Paragraph(new Run($"\t {item.Value} {item.Key} tags references out of limit")));
-                    });
+                        if (refTypesMap.ContainsKey(tag.AddressType)) refTypesMap[tag.AddressType]++;
+                        else refTypesMap[tag.AddressType] = 1;
+                    }
 
-                if (report.TagsAmount <= 0)
-                {
-                    continue;
+                    refTypesMap
+                        .ToList()
+                        .ForEach(item =>
+                        {
+                            Document.Blocks.Add(new Paragraph(new Run($"\t {item.Value} {item.Key} tags references out of limit")));
+                        });
+
+                    if (report.TagsAmount <= 0)
+                    {
+                        continue;
+                    }
+                    var invalidTagPercentage = (double)report.RefOutOfLimitData.Count / report.TagsAmount * 100.0;
+                    Document.Blocks.Add(new Paragraph(new Run($"\t Summury: {invalidTagPercentage:F2}% " +
+                                                             $"({report.RefOutOfLimitData.Count} out of {report.TagsAmount})")));
                 }
-                var invalidTagPercentage = (double)report.RefOutOfLimitData.Count / report.TagsAmount * 100.0;
-                Document.Blocks.Add(new Paragraph(new Run($"\t Summury: {invalidTagPercentage:F2}% " +
-                                                         $"({report.RefOutOfLimitData.Count} out of {report.TagsAmount})")));
             }
-        }
-
-        private void ProduceItems()
-        {
-            
         }
     }
 }

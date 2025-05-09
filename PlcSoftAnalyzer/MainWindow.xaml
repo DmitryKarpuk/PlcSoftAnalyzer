@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PlcSoftAnalyzer"
-        xmlns:view="clr-namespace:PlcSoftAnalyzer.View"
+        xmlns:views="clr-namespace:PlcSoftAnalyzer.Views"
         xmlns:vms="clr-namespace:PlcSoftAnalyzer.ViewModel"
         xmlns:controls="clr-namespace:PlcSoftAnalyzer.Views.Controls"
         mc:Ignorable="d"
@@ -28,7 +28,7 @@
                 <MenuItem Header="Disconnect project" Command="{Binding DisconnectTia}"/>
             </MenuItem>
         </Menu>
-        <view:ProjectInfoView x:Name="projectInfoView" Grid.Row="1" DataContext="{Binding ProjectInfoViewModel}"/>
+        <views:ProjectInfoView x:Name="projectInfoView" Grid.Row="1" DataContext="{Binding ProjectInfoViewModel}"/>
         <GroupBox Grid.Row="2">
             <StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5">
@@ -61,7 +61,7 @@
         </GroupBox>
         <GroupBox Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" MinWidth="300"
                   Padding="10" Header="Report" x:Name="ReportView" DataContext="{Binding TagRefReportViewModel}">
-            <controls:CustomDocumentFlow ItemsSource="{Binding Items}"/>
+            <controls:CustomDocumentFlow ItemsSource="{Binding Items, UpdateSourceTrigger=PropertyChanged}"/>
         </GroupBox>
 
         <StatusBar Grid.Row="15" Grid.ColumnSpan="2" Height="25" VerticalAlignment="Bottom">
