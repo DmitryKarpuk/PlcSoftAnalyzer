@@ -16,6 +16,7 @@
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -126,13 +127,16 @@
     <Compile Include="ViewModel\TagRefReportViewModel.cs" />
     <Compile Include="ViewModel\TagTableViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
-    <Compile Include="View\ProgressWindow.xaml.cs">
+    <Compile Include="Views\Controls\CustomDocumentFlow.xaml.cs">
+      <DependentUpon>CustomDocumentFlow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProgressWindow.xaml.cs">
       <DependentUpon>ProgressWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ProjectInfoView.xaml.cs">
+    <Compile Include="Views\ProjectInfoView.xaml.cs">
       <DependentUpon>ProjectInfoView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\TagReferencesReport.xaml.cs">
+    <Compile Include="Views\TagReferencesReport.xaml.cs">
       <DependentUpon>TagReferencesReport.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
@@ -147,15 +151,16 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\ProgressWindow.xaml">
+    <Page Include="Views\Controls\CustomDocumentFlow.xaml" />
+    <Page Include="Views\ProgressWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ProjectInfoView.xaml">
+    <Page Include="Views\ProjectInfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\TagReferencesReport.xaml">
+    <Page Include="Views\TagReferencesReport.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -187,6 +192,5 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
