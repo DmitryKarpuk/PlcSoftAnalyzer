@@ -109,6 +109,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Interfaces\IExcelReportService.cs" />
+    <Compile Include="Interfaces\IMessageService.cs" />
+    <Compile Include="Interfaces\ITiaPortalService.cs" />
     <Compile Include="Model\PlcTagInfo.cs" />
     <Compile Include="Model\TagTableRefReport.cs" />
     <Compile Include="Model\TagTable.cs" />
@@ -119,8 +121,10 @@
     <Compile Include="Interfaces\IFileDialogService.cs" />
     <Compile Include="Interfaces\IProgressService.cs" />
     <Compile Include="Interfaces\ITagRefAmalyzerService.cs" />
+    <Compile Include="Services\MessageService.cs" />
     <Compile Include="Services\ProgressService.cs" />
     <Compile Include="Services\TagRefAnylizerService.cs" />
+    <Compile Include="Services\TiaPortalService.cs" />
     <Compile Include="ViewModel\DelegateCommand.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ProgressViewModel.cs" />

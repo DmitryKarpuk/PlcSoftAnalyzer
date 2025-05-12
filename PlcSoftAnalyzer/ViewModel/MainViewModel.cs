@@ -27,11 +27,7 @@ namespace PlcSoftAnalyzer.ViewModel
     public class MainViewModel : ViewModelBase
     {
         private bool _isReportDone;
-        private TiaPortal _tiaPortal;
-        private Project _currentProject;
-        private DeviceItem _currentCPU;
         private ProjectInfoViewModel _projectInfoViewMode;
-        private PlcSoftware _currentPlcSoftware;
         private ObservableCollection<TagTableViewModel> _tagTables;
         private TagRefReportViewModel _tagRefReportViewModel;
         private bool _isTagCheckSelected;
@@ -42,6 +38,8 @@ namespace PlcSoftAnalyzer.ViewModel
         private ITagRefAmalyzerService _referencesAmalyzerService;
         private IFileDialogService _fileDialogService;
         private IExcelReportService _excelReportService;
+        private IMessageService _messageService;
+        private ITiaPortalService _tiaPortalService;
         public int ThreadId => Thread.CurrentThread.ManagedThreadId;
         public ObservableCollection<TagTableViewModel> TagTables
         { get { return _tagTables; }
@@ -156,56 +154,84 @@ namespace PlcSoftAnalyzer.ViewModel
         public ICommand PrintReport { get; }
 
         public MainViewModel(IProgressService progressService, ITagRefAmalyzerService tagRefAmalyzerService, 
-                            IFileDialogService fileDialogService, IExcelReportService excelReportService)
+                            IFileDialogService fileDialogService, IExcelReportService excelReportService,
+                            IMessageService messageService, ITiaPortalService tiaPortalService)
         {
             IsReportDone = false;
             _progressService = progressService;
             _fileDialogService = fileDialogService;
             _referencesAmalyzerService = tagRefAmalyzerService;
             _excelReportService = excelReportService;
+            _messageService = messageService;
+            _tiaPortalService = tiaPortalService;
             SelectedInputLimit = 2;
             SelectedOutputLimit = 1;
             ConnectTia = new DelegateCommand(
                 (parameter) =>
                 {
-                    _tiaPortal = TiaProject.ConnectTiaPortal();
-                    _currentProject = _tiaPortal.Projects.FirstOrDefault();
-                    _currentCPU = TiaProject.GetCurrentCPUList(_currentProject)[0];
-                    _currentPlcSoftware = TiaProject.GetCurrentPlcSoftware(_currentCPU);
-                    ProjectInfoViewModel = new ProjectInfoViewModel(_currentProject, _currentCPU);
-                    IsTiaConnected = true;
-
+                    try
+                    {
+                        _tiaPortalService.ConnectOpenedCpuProject();
+                        ProjectInfoViewModel = new ProjectInfoViewModel(_tiaPortalService.CurrentProject, _tiaPortalService.CurrentCpu);
+                        IsTiaConnected = true;
+                        _messageService.ShowInformation("Connected", "Connect Tia Portal");
+                    }
+                    catch (Exception ex)
+                    {
+                        _messageService.ShowError(ex, "Connect Tia Portal");
+                    }
                 });
             DisconnectTia = new DelegateCommand(
                 (parameter) =>
                 {
-                    if (_tiaPortal != null)
+                    try
                     {
-                        _tiaPortal.Dispose();
-                        _tiaPortal = null;
-                        _currentProject = null;
-                        ProjectInfoViewModel = null;
-                        IsTiaConnected = false;
-                        IsTagCheckSelected = false;
-                        IsReportDone = false;
-                        TagTables.Clear();
+                        if (_tiaPortalService.TiaPortal != null)
+                        {
+                            _tiaPortalService.DisconnectOpenedCpuProject();
+                            ProjectInfoViewModel = null;
+                            IsTiaConnected = false;
+                            IsTagCheckSelected = false;
+                            IsReportDone = false;
+                            TagTables.Clear();
+                            _messageService.ShowInformation("Disconnected", "Disconnect Tia Portal");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _messageService.ShowError(ex, "Disconnect Tia Portal");
                     }
                 });
             LoadTagTables = new DelegateCommand(
                 (parameter) =>
                 {
-                    if (parameter is bool == true)
+                    try
                     {
-                        var tagTables = TiaProject.GetAllTagTables(_currentPlcSoftware);
-                        TagTables = new ObservableCollection<TagTableViewModel>(tagTables.Select(table => new TagTableViewModel(table)));
+                        if (parameter is bool == true)
+                        {
+                            var tagTables = TiaProject.GetAllTagTables(_tiaPortalService.CurrentPlcSoftware);
+                            TagTables = new ObservableCollection<TagTableViewModel>(tagTables.Select(table => new TagTableViewModel(table)));
+                        }
+                        else TagTables = null;
                     }
-                    else TagTables = null;
+                    catch (Exception ex)
+                    {
+                        _messageService.ShowError(ex, "Loading tag tables");
+                    }
                 }
             );
             LoadTagReferencesReport = new DelegateCommand(
                 (parameter) =>
                 {
-                    _progressService.RunWithProgressWindowAsync(ExecuteDataLoad);
+                    try
+                    {
+                        _progressService.RunWithProgressWindowAsync(ExecuteDataLoad);
+                        _messageService.ShowInformation("Report generated", "Generate report");
+                    }
+                    catch (Exception ex)
+                    {
+                        _messageService.ShowError(ex, "Generate report");
+                    }
                 });
             PrintReport = new DelegateCommand(
                 (parameter) =>
@@ -214,24 +240,24 @@ namespace PlcSoftAnalyzer.ViewModel
                     {
                         try
                         {
-                            excelReportService.PrintRefAnaylyzerReport(_fileDialogService.FilePath, _referencesAmalyzerService.TagTableRefReportSource);
+                            _excelReportService.PrintRefAnaylyzerReport(_fileDialogService.FilePath, _referencesAmalyzerService.TagTableRefReportSource);
+                            _messageService.ShowInformation("Report printed", "Print report");
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show("Print error.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            _messageService.ShowError(ex, "Print report");
                         }
                     }
                 }
                 );
-            _excelReportService = excelReportService;
+           
         }
 
         private async Task ExecuteDataLoad(CancellationToken token)
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                try
-                {
+
                     var selectedTables = TagTables.Where(table => table.IsSelected).Select(table => table.TagTable).ToList();
                     _referencesAmalyzerService.LoadTagRefOutOfLimitData(selectedTables, token);
                     TagRefReportViewModel = new TagRefReportViewModel();
@@ -239,13 +265,7 @@ namespace PlcSoftAnalyzer.ViewModel
                         TagRefReportViewModel.Items.Add(table);
                         });
                     ;
-                    IsReportDone = true;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Generation error.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                
+                    IsReportDone = true;                
             });
         }
     }

@@ -26,11 +26,14 @@ namespace PlcSoftAnalyzer
         };
         protected override void OnStartup(StartupEventArgs e)
         {
+            var tiaPortalService = new TiaPortalService();
             var propgressService = new ProgressService<ProgressWindow>(new ProgressViewModel());
             var refAnalyzerServie = new TagRefAnylizerService(LimitsMap);
             var fileDialogService = new FileDialogService();
             var excelReportService = new ExcelReportService();
-            var dataContext = new MainViewModel(propgressService, refAnalyzerServie, fileDialogService, excelReportService);
+            var messageService = new MessageService();
+            var dataContext = new MainViewModel(propgressService, refAnalyzerServie, fileDialogService,
+                                                excelReportService, messageService, tiaPortalService);
             MainWindow = new MainWindow()
             {
                 DataContext = dataContext
