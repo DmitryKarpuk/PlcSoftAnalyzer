@@ -11,7 +11,7 @@ using PlcSoftAnalyzer.Interfaces;
 
 namespace PlcSoftAnalyzer.Services
 {
-    public class TagRefAnylizerService : ITagRefAmalyzerService
+    public class TagRefAnylizerService : ITagRefAnalyzerService
     {
         public List<TagTableRefReport> TagTableRefReportSource {  get; private set; }
         public  Dictionary<TagAddressType, int> LimitsMap { get; set; }

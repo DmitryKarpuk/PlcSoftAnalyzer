@@ -8,6 +8,7 @@ using Siemens.Engineering;
 using Siemens.Engineering.HW;
 using Siemens.Engineering.HW.Features;
 using Siemens.Engineering.SW;
+using Siemens.Engineering.SW.Tags;
 
 namespace PlcSoftAnalyzer.Services
 {
@@ -17,6 +18,15 @@ namespace PlcSoftAnalyzer.Services
         public Project CurrentProject { get; private set; }
         public DeviceItem CurrentCpu { get; private set; }
         public PlcSoftware CurrentPlcSoftware { get; private set; }
+        public List<PlcTagTable> CurrentSoftwareTagTables 
+        { 
+            get
+            {
+                if (CurrentPlcSoftware != null) 
+                    return GetAllTagTables(CurrentPlcSoftware);
+                return null;
+            }
+        }
 
         public TiaPortalService() { }
 
@@ -81,6 +91,23 @@ namespace PlcSoftAnalyzer.Services
                 return software as PlcSoftware;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Load all tag tables from PLC Software.
+        /// </summary>
+        /// <param name="plcSoftware"> PLC Software object</param>
+        /// <returns>List of tab tables</returns>
+        public static List<PlcTagTable> GetAllTagTables(PlcSoftware plcSoftware)
+        {
+            //Get tag table IEnumerable<PlcTagTable>
+            var tagTables = plcSoftware.TagTableGroup.TagTables.ToList();
+            //Get tag table IEnumerable<PlcTagTableUserGroup>
+            plcSoftware.TagTableGroup.Groups.ToList().ForEach(group =>
+            {
+                tagTables.AddRange(group.TagTables.ToList());
+            });
+            return tagTables;
         }
     }
 }

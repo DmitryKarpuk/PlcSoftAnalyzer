@@ -15,11 +15,11 @@ namespace PlcSoftAnalyzer.ViewModel
         public bool IsSelected { get; set; }
         public string Name { get; set; }
 
-        public TagTableViewModel(TagTable table)
+        public TagTableViewModel(PlcTagTable table, bool isSelected=false)
         {
-            TagTable = table.PlcTagTable;
-            IsSelected = table.IsSelected;
-            Name = table.PlcTagTable.Name;
+            TagTable = table;
+            IsSelected = isSelected;
+            Name = table.Name;
         }
     }
 }

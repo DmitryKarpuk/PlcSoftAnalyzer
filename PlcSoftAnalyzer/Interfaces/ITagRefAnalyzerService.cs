@@ -9,7 +9,7 @@ using PlcSoftAnalyzer.Model;
 
 namespace PlcSoftAnalyzer.Interfaces
 {
-    public interface ITagRefAmalyzerService
+    public interface ITagRefAnalyzerService
     {
         List<TagTableRefReport> TagTableRefReportSource { get; }
         Dictionary<TagAddressType, int> LimitsMap { get; }

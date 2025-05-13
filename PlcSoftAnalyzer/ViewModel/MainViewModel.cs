@@ -35,7 +35,7 @@ namespace PlcSoftAnalyzer.ViewModel
         private int _selectedInputLimit;
         private int _selectedOutputLimit;
         private IProgressService _progressService;
-        private ITagRefAmalyzerService _referencesAmalyzerService;
+        private ITagRefAnalyzerService _referencesAnalyzerService;
         private IFileDialogService _fileDialogService;
         private IExcelReportService _excelReportService;
         private IMessageService _messageService;
@@ -61,7 +61,6 @@ namespace PlcSoftAnalyzer.ViewModel
                 OnPropertyChanged(nameof(ProjectInfoViewModel));
             }
         }
-        //public PlcSoftware PlcSoftware { get; set; }
         public TagRefReportViewModel TagRefReportViewModel
         {
             get { return _tagRefReportViewModel; }
@@ -99,7 +98,7 @@ namespace PlcSoftAnalyzer.ViewModel
             set
             {
                 _selectedInputLimit = value;
-                _referencesAmalyzerService.LimitsMap[TagAddressType.Input] = _selectedInputLimit;
+                _referencesAnalyzerService.LimitsMap[TagAddressType.Input] = _selectedInputLimit;
             }
         }
         public int[] OutputLimits => new int[5] { 1, 2, 3, 4, 5 };
@@ -112,7 +111,7 @@ namespace PlcSoftAnalyzer.ViewModel
             set
             {
                 _selectedOutputLimit = value;
-                _referencesAmalyzerService.LimitsMap[TagAddressType.Output] = _selectedOutputLimit;
+                _referencesAnalyzerService.LimitsMap[TagAddressType.Output] = _selectedOutputLimit;
             }
         }
         public bool IsReportDone
@@ -153,14 +152,14 @@ namespace PlcSoftAnalyzer.ViewModel
         /// </summary>
         public ICommand PrintReport { get; }
 
-        public MainViewModel(IProgressService progressService, ITagRefAmalyzerService tagRefAmalyzerService, 
+        public MainViewModel(IProgressService progressService, ITagRefAnalyzerService tagRefAnalyzerService, 
                             IFileDialogService fileDialogService, IExcelReportService excelReportService,
                             IMessageService messageService, ITiaPortalService tiaPortalService)
         {
             IsReportDone = false;
             _progressService = progressService;
             _fileDialogService = fileDialogService;
-            _referencesAmalyzerService = tagRefAmalyzerService;
+            _referencesAnalyzerService = tagRefAnalyzerService;
             _excelReportService = excelReportService;
             _messageService = messageService;
             _tiaPortalService = tiaPortalService;
@@ -193,7 +192,7 @@ namespace PlcSoftAnalyzer.ViewModel
                             IsTiaConnected = false;
                             IsTagCheckSelected = false;
                             IsReportDone = false;
-                            TagTables.Clear();
+                            TagTables?.Clear();
                             _messageService.ShowInformation("Disconnected", "Disconnect Tia Portal");
                         }
                     }
@@ -209,7 +208,7 @@ namespace PlcSoftAnalyzer.ViewModel
                     {
                         if (parameter is bool == true)
                         {
-                            var tagTables = TiaProject.GetAllTagTables(_tiaPortalService.CurrentPlcSoftware);
+                            var tagTables = _tiaPortalService.CurrentSoftwareTagTables;
                             TagTables = new ObservableCollection<TagTableViewModel>(tagTables.Select(table => new TagTableViewModel(table)));
                         }
                         else TagTables = null;
@@ -240,7 +239,7 @@ namespace PlcSoftAnalyzer.ViewModel
                     {
                         try
                         {
-                            _excelReportService.PrintRefAnaylyzerReport(_fileDialogService.FilePath, _referencesAmalyzerService.TagTableRefReportSource);
+                            _excelReportService.PrintRefAnaylyzerReport(_fileDialogService.FilePath, _referencesAnalyzerService.TagTableRefReportSource);
                             _messageService.ShowInformation("Report printed", "Print report");
                         }
                         catch (Exception ex)
@@ -258,10 +257,13 @@ namespace PlcSoftAnalyzer.ViewModel
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
 
-                    var selectedTables = TagTables.Where(table => table.IsSelected).Select(table => table.TagTable).ToList();
-                    _referencesAmalyzerService.LoadTagRefOutOfLimitData(selectedTables, token);
+                    var selectedTables = TagTables
+                            .Where(table => table.IsSelected)
+                            .Select(table => table.TagTable)
+                            .ToList();
+                    _referencesAnalyzerService.LoadTagRefOutOfLimitData(selectedTables, token);
                     TagRefReportViewModel = new TagRefReportViewModel();
-                    _referencesAmalyzerService.TagTableRefReportSource.ForEach(table => {
+                    _referencesAnalyzerService.TagTableRefReportSource.ForEach(table => {
                         TagRefReportViewModel.Items.Add(table);
                         });
                     ;
