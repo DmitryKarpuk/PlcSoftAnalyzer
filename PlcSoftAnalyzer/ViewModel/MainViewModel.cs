@@ -219,19 +219,19 @@ namespace PlcSoftAnalyzer.ViewModel
                     }
                 }
             );
-            LoadTagReferencesReport = new DelegateCommand(
-                (parameter) =>
+            LoadTagReferencesReport = new AsyncDelegateCommand(
+                (async () =>
                 {
                     try
                     {
-                        _progressService.RunWithProgressWindowAsync(ExecuteDataLoad);
+                        await _progressService.RunWithProgressWindowAsync(ExecuteDataLoad);
                         _messageService.ShowInformation("Report generated", "Generate report");
                     }
                     catch (Exception ex)
                     {
                         _messageService.ShowError(ex, "Generate report");
                     }
-                });
+                }));
             PrintReport = new DelegateCommand(
                 (parameter) =>
                 {
