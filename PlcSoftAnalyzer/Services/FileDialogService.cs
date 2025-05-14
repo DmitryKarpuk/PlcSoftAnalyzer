@@ -13,6 +13,10 @@ namespace PlcSoftAnalyzer.Services
     {
         public string FilePath { get; set; }
 
+        /// <summary>
+        /// Open standard OpenFileDialog window and return file path result.
+        /// </summary>
+        /// <returns></returns>
         public bool OpenFileDialog()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -24,6 +28,10 @@ namespace PlcSoftAnalyzer.Services
             else { return false; }
         }
 
+        /// <summary>
+        /// Open standard SaveFileDialog window and return file path result.
+        /// </summary>
+        /// <returns></returns>
         public bool SaveFileDialog()
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();

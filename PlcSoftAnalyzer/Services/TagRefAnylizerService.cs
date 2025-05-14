@@ -26,6 +26,11 @@ namespace PlcSoftAnalyzer.Services
             TagTableRefReportSource = new List<TagTableRefReport>();
         }
 
+        /// <summary>
+        /// Calculating references from tags and estimate depend on the limit.
+        /// </summary>
+        /// <param name="tables">Selected for analyzing tables</param>
+        /// <param name="token">Token for canceling operation</param>
         public void LoadTagRefOutOfLimitData(List<PlcTagTable> tables, CancellationToken token)
         {
             foreach (var table in tables)

@@ -17,6 +17,12 @@ namespace PlcSoftAnalyzer.Services
         {
             _progressViewModel = viewModel;
         }
+        /// <summary>
+        /// Run window with progressbar in a new Thread and 
+        /// simultaneously run long time operation in the main thread.
+        /// </summary>
+        /// <param name="operation">Long time running operation</param>
+        /// <returns></returns>
         public async Task RunWithProgressWindowAsync(Func<CancellationToken, Task> operation)
         {
             var cts = new CancellationTokenSource();

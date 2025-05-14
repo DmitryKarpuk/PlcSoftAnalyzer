@@ -248,8 +248,7 @@ namespace PlcSoftAnalyzer.ViewModel
                         }
                     }
                 }
-                );
-           
+                );          
         }
 
         private async Task ExecuteDataLoad(CancellationToken token)
@@ -257,17 +256,18 @@ namespace PlcSoftAnalyzer.ViewModel
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
 
-                    var selectedTables = TagTables
-                            .Where(table => table.IsSelected)
-                            .Select(table => table.TagTable)
-                            .ToList();
-                    _referencesAnalyzerService.LoadTagRefOutOfLimitData(selectedTables, token);
-                    TagRefReportViewModel = new TagRefReportViewModel();
-                    _referencesAnalyzerService.TagTableRefReportSource.ForEach(table => {
-                        TagRefReportViewModel.Items.Add(table);
-                        });
-                    ;
-                    IsReportDone = true;                
+                var selectedTables = TagTables
+                        .Where(table => table.IsSelected)
+                        .Select(table => table.TagTable)
+                        .ToList();
+                _referencesAnalyzerService.LoadTagRefOutOfLimitData(selectedTables, token);
+                TagRefReportViewModel = new TagRefReportViewModel();
+                _referencesAnalyzerService.TagTableRefReportSource.ForEach(table =>
+                {
+                    TagRefReportViewModel.Items.Add(table);
+                });
+                ;
+                IsReportDone = true;
             });
         }
     }

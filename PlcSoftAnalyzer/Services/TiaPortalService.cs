@@ -30,6 +30,9 @@ namespace PlcSoftAnalyzer.Services
 
         public TiaPortalService() { }
 
+        /// <summary>
+        /// Establish connection to opened TiaPortal and First CPU project.
+        /// </summary>
         public void ConnectOpenedCpuProject()
         {
             TiaPortal = ConnectOpenedProccess();
@@ -38,6 +41,9 @@ namespace PlcSoftAnalyzer.Services
             CurrentPlcSoftware = GetCurrentPlcSoftware(CurrentCpu);
         }
 
+        /// <summary>
+        /// Break connection to opened TiaPortal.
+        /// </summary>
         public void DisconnectOpenedCpuProject()
         {
             TiaPortal.Dispose();
