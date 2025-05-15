@@ -13,6 +13,7 @@ namespace PlcSoftAnalyzer.Interfaces
     {
         List<TagTableRefReport> TagTableRefReportSource { get; }
         Dictionary<TagAddressType, int> LimitsMap { get; }
+        public void CleanSource();
         void LoadTagRefOutOfLimitData(List<PlcTagTable> tables, CancellationToken token);
     }
 }

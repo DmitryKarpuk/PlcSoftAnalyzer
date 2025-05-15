@@ -26,6 +26,7 @@
             <MenuItem Header="File" Height="Auto">
                 <MenuItem Header="Connect opened" Command="{Binding ConnectTia}"/>
                 <MenuItem Header="Disconnect project" Command="{Binding DisconnectTia}"/>
+                <MenuItem Header="Clear report" Command="{Binding ClearReportWindow}"/>
             </MenuItem>
         </Menu>
         <views:ProjectInfoView x:Name="projectInfoView" Grid.Row="1" DataContext="{Binding ProjectInfoViewModel}"/>
@@ -60,7 +61,7 @@
             </StackPanel>
         </GroupBox>
         <GroupBox Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" MinWidth="300"
-                  Padding="10" Header="Report" x:Name="ReportView" DataContext="{Binding TagRefReportViewModel}">
+                  Padding="10" Header="Plc Software Analyzer Report" x:Name="ReportView" DataContext="{Binding TagRefReportViewModel}">
             <controls:CustomDocumentFlow ItemsSource="{Binding Items, UpdateSourceTrigger=PropertyChanged}"/>
         </GroupBox>
 
@@ -69,5 +70,6 @@
                 <TextBlock Text="{Binding Path=ThreadId, StringFormat=Thread Id : {0}}"/>
             </StatusBarItem>
         </StatusBar>
+        
     </Grid>
 </Window>

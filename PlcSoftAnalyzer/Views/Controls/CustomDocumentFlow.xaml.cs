@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
+using DocumentFormat.OpenXml.Bibliography;
 using PlcSoftAnalyzer.Model;
 
 namespace PlcSoftAnalyzer.Views.Controls
@@ -28,13 +29,6 @@ namespace PlcSoftAnalyzer.Views.Controls
 
             //незнаю надо это или нет попробуй убрать
             Document = new FlowDocument();
-            
-            Document.Blocks.Add(new Paragraph(new Run("PLC soft analyzer report"))
-            {
-                FontSize = 20,
-                FontWeight = FontWeights.Bold,
-                TextAlignment = TextAlignment.Center
-            });
         }
         
         private static void OnItemsSourceChanged(
@@ -67,35 +61,49 @@ namespace PlcSoftAnalyzer.Views.Controls
 
         private void CollectionOnCollectionChanged(object _, NotifyCollectionChangedEventArgs e)
         {
-            foreach (var item in e.NewItems)
+            switch (e.Action)
             {
-                if (item is not TagTableRefReport report) continue;
-                else
-                {
-                    Document.Blocks.Add(new Paragraph(new Run($"{report.Name}")) { FontWeight = FontWeights.Bold });
-                    var refTypesMap = new Dictionary<TagAddressType, int>();
-                    foreach (var tag in report.RefOutOfLimitData)
+                case NotifyCollectionChangedAction.Add:
+                    foreach (var item in e.NewItems)
                     {
-                        if (refTypesMap.ContainsKey(tag.AddressType)) refTypesMap[tag.AddressType]++;
-                        else refTypesMap[tag.AddressType] = 1;
-                    }
-
-                    refTypesMap
-                        .ToList()
-                        .ForEach(item =>
+                        if (item is not TagTableRefReport report) continue;
+                        else
                         {
-                            Document.Blocks.Add(new Paragraph(new Run($"\t {item.Value} {item.Key} tags references out of limit")));
-                        });
-
-                    if (report.TagsAmount <= 0)
-                    {
-                        continue;
+                            AddReport(report);
+                        }
                     }
-                    var invalidTagPercentage = (double)report.RefOutOfLimitData.Count / report.TagsAmount * 100.0;
-                    Document.Blocks.Add(new Paragraph(new Run($"\t Summury: {invalidTagPercentage:F2}% " +
-                                                             $"({report.RefOutOfLimitData.Count} out of {report.TagsAmount})")));
-                }
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    Document.Blocks.Clear();
+                    break;              
+             }
+
+        }
+
+        private void AddReport(TagTableRefReport report)
+        {
+            Document.Blocks.Add(new Paragraph(new Run($"{report.Name}")) { FontWeight = FontWeights.Bold });
+            var refTypesMap = new Dictionary<TagAddressType, int>();
+            foreach (var tag in report.RefOutOfLimitData)
+            {
+                if (refTypesMap.ContainsKey(tag.AddressType)) refTypesMap[tag.AddressType]++;
+                else refTypesMap[tag.AddressType] = 1;
             }
+
+            refTypesMap
+                .ToList()
+                .ForEach(item =>
+                {
+                    Document.Blocks.Add(new Paragraph(new Run($"\t {item.Value} {item.Key} tags references out of limit")));
+                });
+
+            if (report.TagsAmount <= 0)
+            {
+                return;
+            }
+            var invalidTagPercentage = (double)report.RefOutOfLimitData.Count / report.TagsAmount * 100.0;
+            Document.Blocks.Add(new Paragraph(new Run($"\t Summury: {invalidTagPercentage:F2}% " +
+                                                     $"({report.RefOutOfLimitData.Count} out of {report.TagsAmount})")));
         }
     }
 }

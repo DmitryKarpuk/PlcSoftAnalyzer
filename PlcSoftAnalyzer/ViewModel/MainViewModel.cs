@@ -151,6 +151,7 @@ namespace PlcSoftAnalyzer.ViewModel
         /// Print full report in excel
         /// </summary>
         public ICommand PrintReport { get; }
+        public ICommand ClearReportWindow { get; }
 
         public MainViewModel(IProgressService progressService, ITagRefAnalyzerService tagRefAnalyzerService, 
                             IFileDialogService fileDialogService, IExcelReportService excelReportService,
@@ -193,6 +194,7 @@ namespace PlcSoftAnalyzer.ViewModel
                             IsTagCheckSelected = false;
                             IsReportDone = false;
                             TagTables?.Clear();
+                            _referencesAnalyzerService?.CleanSource();
                             _messageService.ShowInformation("Disconnected", "Disconnect Tia Portal");
                         }
                     }
@@ -224,6 +226,7 @@ namespace PlcSoftAnalyzer.ViewModel
                 {
                     try
                     {
+                        ClearReportWindow.Execute(null);
                         await _progressService.RunWithProgressWindowAsync(ExecuteDataLoad);
                         _messageService.ShowInformation("Report generated", "Generate report");
                     }
@@ -241,6 +244,7 @@ namespace PlcSoftAnalyzer.ViewModel
                         {
                             _excelReportService.PrintRefAnaylyzerReport(_fileDialogService.FilePath, _referencesAnalyzerService.TagTableRefReportSource);
                             _messageService.ShowInformation("Report printed", "Print report");
+                            _referencesAnalyzerService?.CleanSource();
                         }
                         catch (Exception ex)
                         {
@@ -248,20 +252,26 @@ namespace PlcSoftAnalyzer.ViewModel
                         }
                     }
                 }
-                );          
+                );
+            ClearReportWindow = new DelegateCommand(_ =>
+            {
+                _referencesAnalyzerService.CleanSource();
+                if (TagRefReportViewModel != null) TagRefReportViewModel.Items.Clear();
+            }
+            );
         }
 
         private async Task ExecuteDataLoad(CancellationToken token)
         {
+            if (TagRefReportViewModel == null)
+                TagRefReportViewModel = new TagRefReportViewModel();
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-
                 var selectedTables = TagTables
                         .Where(table => table.IsSelected)
                         .Select(table => table.TagTable)
                         .ToList();
-                _referencesAnalyzerService.LoadTagRefOutOfLimitData(selectedTables, token);
-                TagRefReportViewModel = new TagRefReportViewModel();
+                _referencesAnalyzerService.LoadTagRefOutOfLimitData(selectedTables, token);               
                 _referencesAnalyzerService.TagTableRefReportSource.ForEach(table =>
                 {
                     TagRefReportViewModel.Items.Add(table);

@@ -59,7 +59,10 @@ namespace PlcSoftAnalyzer.Services
             }
         }
 
-
+        public void CleanSource()
+        {
+            TagTableRefReportSource.Clear();
+        }
 
         /// <summary>
         /// Calculate cross references of the PLC tag.
