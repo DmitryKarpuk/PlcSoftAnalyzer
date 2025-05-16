@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
-using DocumentFormat.OpenXml.Bibliography;
 using PlcSoftAnalyzer.Model;
 
 namespace PlcSoftAnalyzer.Views.Controls
@@ -26,8 +25,6 @@ namespace PlcSoftAnalyzer.Views.Controls
         public CustomDocumentFlow()
         {
             InitializeComponent();
-
-            //незнаю надо это или нет попробуй убрать
             Document = new FlowDocument();
         }
         
