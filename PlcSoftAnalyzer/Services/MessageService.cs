@@ -52,7 +52,7 @@ namespace PlcSoftAnalyzer.Services
         /// <param name="title">Title of the message window</param>
         public void ShowError(Exception error, string title)
         {
-            ShowMessage("{ error.InnerException?.Message}\n{ error.InnerException?.StackTrace}", title, 
+            ShowMessage($"{error.Message}\n{error.InnerException?.Message}\n{ error.InnerException?.StackTrace}", title, 
                 MessageBoxImage.Error);
         }
 
