@@ -47,7 +47,7 @@ namespace PlcSoftAnalyzer
             _serviceProvider = serviceCollection.BuildServiceProvider();
 
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-            mainWindow.DataContext = _serviceProvider.GetRequiredService<MainViewModel>();
+            //mainWindow.DataContext = _serviceProvider.GetRequiredService<MainViewModel>();
             mainWindow.Show();
             base.OnStartup(e);
         }
@@ -56,8 +56,9 @@ namespace PlcSoftAnalyzer
         {
             // DI registrations
             services.AddSingleton<ITiaPortalService, TiaPortalService>();
-            services.AddSingleton<IProgressService, ProgressService<ProgressWindow>>();
-            services.AddSingleton<ProgressViewModel>();
+            services.AddTransient<ProgressViewModel>();
+            services.AddTransient<IProgressService, ProgressService<ProgressWindow>>(
+                s => new ProgressService<ProgressWindow>(s.GetRequiredService<ProgressViewModel>()));           
             services.AddSingleton<IFileDialogService, FileDialogService>();
             services.AddSingleton<IExcelReportService, ExcelReportService>();
             services.AddSingleton<IMessageService, MessageService>();
@@ -67,7 +68,10 @@ namespace PlcSoftAnalyzer
             services.AddSingleton<MainViewModel>();
 
             // Views
-            services.AddSingleton<MainWindow>();
+            services.AddSingleton<MainWindow>(s => new MainWindow()
+            {
+                DataContext = s.GetRequiredService<MainViewModel>()
+            });
         }
     }
 }
