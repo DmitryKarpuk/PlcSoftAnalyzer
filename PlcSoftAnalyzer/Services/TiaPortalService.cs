@@ -37,7 +37,7 @@ namespace PlcSoftAnalyzer.Services
         {
             TiaPortal = ConnectOpenedProccess();
             CurrentProject = TiaPortal.Projects.FirstOrDefault();
-            CurrentCpu = GetCurrentCPUList(CurrentProject)[0];
+            CurrentCpu = GetCurrentCPUList(CurrentProject).FirstOrDefault(null);
             CurrentPlcSoftware = GetCurrentPlcSoftware(CurrentCpu);
         }
 
@@ -53,11 +53,22 @@ namespace PlcSoftAnalyzer.Services
         }
         public TiaPortal ConnectOpenedProccess()
         {
-            int processId;
-            var TiaPortalProcessList = new List<TiaPortalProcess>(TiaPortal.GetProcesses());
-            if (TiaPortalProcessList.Count >= 1) processId = TiaPortalProcessList[0].Id;
-            else throw new ArgumentException("No TiaPortal precess opened");
-            return TiaPortal.GetProcess(processId).Attach();
+            try
+            {
+                var tiaPortalProcessList = new List<TiaPortalProcess>(TiaPortal.GetProcesses());
+
+                if (tiaPortalProcessList.Count == 0)
+                {
+                    throw new InvalidOperationException("No TIA Portal process opened.");
+                }
+
+                int processId = tiaPortalProcessList[0].Id;
+                return TiaPortal.GetProcess(processId).Attach();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Failed to connect to TIA Portal process.", ex);
+            }
         }
 
         /// <summary>
@@ -67,6 +78,7 @@ namespace PlcSoftAnalyzer.Services
         /// <returns>List of defined CPU</returns>
         public List<DeviceItem> GetCurrentCPUList(Project project)
         {
+            if (project == null) throw new ArgumentNullException(nameof(project));
             var deviceList = new List<DeviceItem>();
             foreach (var device in project.Devices)
             {
@@ -90,6 +102,7 @@ namespace PlcSoftAnalyzer.Services
         /// <returns>PLC software object.</returns>
         public PlcSoftware GetCurrentPlcSoftware(DeviceItem deviceItem)
         {
+            if (deviceItem == null) throw new ArgumentNullException(nameof(deviceItem));
             SoftwareContainer softwareContainer = ((IEngineeringServiceProvider)deviceItem).GetService<SoftwareContainer>();
             if (softwareContainer != null)
             {
@@ -106,6 +119,7 @@ namespace PlcSoftAnalyzer.Services
         /// <returns>List of tab tables</returns>
         public static List<PlcTagTable> GetAllTagTables(PlcSoftware plcSoftware)
         {
+            if (plcSoftware == null) throw new ArgumentNullException(nameof(plcSoftware));
             //Get tag table IEnumerable<PlcTagTable>
             var tagTables = plcSoftware.TagTableGroup.TagTables.ToList();
             //Get tag table IEnumerable<PlcTagTableUserGroup>
