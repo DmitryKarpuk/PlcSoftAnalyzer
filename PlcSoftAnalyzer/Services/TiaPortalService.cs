@@ -37,7 +37,7 @@ namespace PlcSoftAnalyzer.Services
         {
             TiaPortal = ConnectOpenedProccess();
             CurrentProject = TiaPortal.Projects.FirstOrDefault();
-            CurrentCpu = GetCurrentCPUList(CurrentProject).FirstOrDefault(null);
+            CurrentCpu = GetCurrentCPUList(CurrentProject).FirstOrDefault();
             CurrentPlcSoftware = GetCurrentPlcSoftware(CurrentCpu);
         }
 
@@ -80,18 +80,22 @@ namespace PlcSoftAnalyzer.Services
         {
             if (project == null) throw new ArgumentNullException(nameof(project));
             var deviceList = new List<DeviceItem>();
+            if (project.Devices == null) return deviceList;
             foreach (var device in project.Devices)
             {
-                var deviceItemComposition = device.DeviceItems;
-                foreach (var deviceItem in deviceItemComposition)
+                if (device?.DeviceItems == null)
+                    continue;
+                foreach (var deviceItem in device?.DeviceItems)
                 {
-                    if (deviceItem.Classification == DeviceItemClassifications.CPU)
+                    if (deviceItem == null) continue;
+                    if (deviceItem?.Classification == DeviceItemClassifications.CPU)
                     {
 
                         deviceList.Add(deviceItem);
                     }
                 }
             }
+            if (deviceList.Count == 0) throw new InvalidOperationException("There are no CPU founded");
             return deviceList;
         }
 
