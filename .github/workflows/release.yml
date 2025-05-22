@@ -1,0 +1,37 @@
+name: Build and Deploy app
+
+on: 
+  push:
+    tags:
+      -'v1.0.0'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1.1
+
+    - name: Restore NuGet packages
+      run: nuget restore PlcSoftAnalyzer\PlcSoftAnalyzer.csproj
+
+    - name: Build WPF App (.NET Framework)
+      run: msbuild PlcSoftAnalyzer\PlcSoftAnalyzer.csproj /p:Configuration=Release
+    
+    - name: Install Inno Setup
+      run: choco install innosetup -y
+    
+    - name: Compile Innosetup script
+      run: |
+        & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\setup.iss
+      
+    - name: Upload Setup to GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ./PlcSoftAnalyzerInstaller/PlcSoftAnalyzerInstaller.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
