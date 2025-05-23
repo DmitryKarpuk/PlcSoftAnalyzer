@@ -12,6 +12,10 @@ using PlcSoftAnalyzer.Interfaces;
 using System.Threading;
 using PlcSoftAnalyzer.Model;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Win32;
+using System.Reflection;
+using System.IO;
+using Siemens.Collaboration.Net;
 
 namespace PlcSoftAnalyzer
 {
@@ -29,21 +33,9 @@ namespace PlcSoftAnalyzer
         };
         protected override void OnStartup(StartupEventArgs e)
         {
-            //var tiaPortalService = new TiaPortalService();
-            //var progressService = new ProgressService<ProgressWindow>(new ProgressViewModel());
-            //var refAnalyzerServie = new TagRefAnylizerService(LimitsMap);
-            //var fileDialogService = new FileDialogService();
-            //var excelReportService = new ExcelReportService();
-            //var messageService = new MessageService();
-            //var dataContext = new MainViewModel(progressService, refAnalyzerServie, fileDialogService,
-            //                                    excelReportService, messageService, tiaPortalService);
-            //MainWindow = new MainWindow()
-            //{
-            //    DataContext = dataContext
-            //};
+            Api.Global.Openness().Initialize();
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
-
             _serviceProvider = serviceCollection.BuildServiceProvider();
 
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
