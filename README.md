@@ -45,12 +45,17 @@
 
 7. Build and run the application.
 
+---
+
 ## Installation by setup file.
+
 1. Download installation file [PlcSoftAnalyzerInstaller.exe](https://github.com/DmitryKarpuk/PlcSoftAnalyzer/releases/download/v1.0.0/PlcSoftAnalyzerInstaller.exe) 
 2. Run the installer as Administrator
 
+---
 
 ## Usage
+
 1. Launch the application.
 
 2. Connect to an open instance of TIA Portal. For now application establish connection only to the localy opened project.
@@ -66,28 +71,15 @@
 
 7. Optionally, export results to .xlsx for reporting or further processing.
 
+---
+
 ## User interface
 1. Main menu
 ![plot](./docs/MainMenu.png)
 2. Generated report.
 ![plot](./docs/ReportDone.png)
 
-## Programm structure
-
-/src
-  /PLCAnalyzer
-    ├── App.xaml
-    ├── App.xaml.cs
-    ├── MainWindow.xaml
-    ├── MainWindow.xaml.cs
-    ├── Interfaces/
-    ├── Models/
-    ├── Services/
-    ├── ViewModels/
-    └── Views/
-        └── Controls/
-
-
+---
 
 ## Known Limitations
 - Application works only with local opened project. Handling server projects will be enabled in future versions.
