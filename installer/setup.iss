@@ -30,9 +30,9 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\VisualStudio\repos\PlcSoftAnalyzer\PlcSoftAnalyzer\bin\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\VisualStudio\repos\PlcSoftAnalyzer\artifacts\readme.txt.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\VisualStudio\repos\PlcSoftAnalyzer\PlcSoftAnalyzer\bin\Release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\src\PlcSoftAnalyzer\bin\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\readme.txt.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\src\PlcSoftAnalyzer\bin\Release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

@@ -136,12 +136,12 @@
       <HintPath>..\packages\Siemens.Collaboration.Net.Windows.Authentication.3.0.1725521661\lib\net48\Siemens.Collaboration.Net.Windows.Authentication.dll</HintPath>
     </Reference>
     <Reference Include="Siemens.Engineering">
-      <HintPath>..\..\..\..\TIA\Portal V19\PublicAPI\V19\Siemens.Engineering.dll</HintPath>
+      <HintPath>..\..\..\..\..\TIA\Portal V19\PublicAPI\V19\Siemens.Engineering.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Siemens.Engineering.Hmi, Version=19.0.0.0, Culture=neutral, PublicKeyToken=d29ec89bac048f84, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\TIA\Portal V19\PublicAPI\V19\Siemens.Engineering.Hmi.dll</HintPath>
+      <HintPath>..\..\..\..\..\TIA\Portal V19\PublicAPI\V19\Siemens.Engineering.Hmi.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
