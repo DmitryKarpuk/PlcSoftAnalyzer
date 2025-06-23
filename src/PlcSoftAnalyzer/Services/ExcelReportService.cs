@@ -23,11 +23,13 @@ namespace PlcSoftAnalyzer.Services
             var wb = new XLWorkbook();
             foreach(var table in TagTableRefReportSource)
             {
+                var sortedTable = table.RefOutOfLimitData.OrderBy(t => t.ReferenceAmount)
+                                                         .ToList();
                 if (table.RefOutOfLimitData.Count > 0)
                 {
                     var ws = wb.AddWorksheet(table.Name);
                     ws = AddTitles(ws, titles);
-                    ws.Cell("A2").InsertData(table.RefOutOfLimitData);
+                    ws.Cell("A2").InsertData(sortedTable);
                 }
             }
             wb.SaveAs(fileName);

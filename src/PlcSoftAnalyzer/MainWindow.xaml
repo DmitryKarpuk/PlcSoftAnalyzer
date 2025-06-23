@@ -8,7 +8,7 @@
         xmlns:vms="clr-namespace:PlcSoftAnalyzer.ViewModel"
         xmlns:controls="clr-namespace:PlcSoftAnalyzer.Views.Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="700" Width="1000">
+        Title="PlcSoftAnalyzer" Height="700" Width="1000">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
